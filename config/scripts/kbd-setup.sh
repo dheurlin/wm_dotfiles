@@ -3,7 +3,7 @@ pkill xcape
 
 
 
-# Set key repeat speed 
+# Set key repeat speed
 xset r rate 200 30
 
 # Start by swapping capslock and escape

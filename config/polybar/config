@@ -73,7 +73,7 @@ tray-padding = 4
 
 enable-ipc = true
 
-; wm-restack = bspwm
+wm-restack = bspwm
 ;wm-restack = i3
 
 ; override-redirect = true

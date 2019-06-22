@@ -12,6 +12,7 @@ autostart(){
 
     # Compositor
     compton -b &
+
     # Keyboard daemon
     sxhkd &
 
