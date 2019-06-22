@@ -1,7 +1,6 @@
-#
-# wm independent hotkeys
+###### wm independent hotkeys ##############
 
-# Media keys
+####### Media keys
 
 XF86AudioRaiseVolume
     ~/.config/scripts/volume.sh +5%
@@ -17,6 +16,31 @@ XF86MonBrightnessUp
 
 XF86MonBrightnessDown
     xbacklight -dec 10
+
+# Special: set brightness to minimum whith mod+f10
+super + F10
+    xbacklight -set 1
+
+shift + XF86MonBrightnessUp
+    ~/bin/redshift-ctrl inc
+
+shift + XF86MonBrightnessDown
+    ~/bin/redshift-ctrl dec
+
+# Media player controls
+XF86AudioPlay
+    playerctl play-pause
+
+XF86AudioNext
+    playerctl next
+
+XF86AudioPrev
+    playerctl previous
+
+# Screenshot
+# Print + {_, shift}
+{_, shift} + Print
+    gnome-screenshot {_,-a}
 
 # terminal emulator
 super + Return
@@ -39,9 +63,9 @@ super + alt + r
 super + ctrl + {b,n,r,c}
     {firefox-nightly, nautilus, kitty zsh -c -i 'ranger', gnome-calculator}
 
-#
-# bspwm hotkeys
-#
+
+####### bspwm hotkeys #########################
+
 
 # quit/restart bspwm
 super + @shift + {e,r}
@@ -49,7 +73,7 @@ super + @shift + {e,r}
 
 # close and kill
 # super + {_,shift + }q
-# 	bspc node -{c,k}
+#	bspc node -{c,k}
 # just close
 super + shift + q
     bspc node -c
