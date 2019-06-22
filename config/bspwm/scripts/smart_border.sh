@@ -1,8 +1,8 @@
 #! /bin/bash
 
 #########################################################
-# Removes borders if there is only one window open
-# on a desktop
+# Removes borders if there is only one non-floating
+# window on a desktop
 #########################################################
 
 border_width=`bspc config border_width`
@@ -33,7 +33,7 @@ bspc subscribe node_add node_remove node_transfer | while read -r event; do
   for desktop in $desktops; do
 
     name=` bspc query -D --desktop $desktop --names`
-    nodes=`bspc query -N --desktop $desktop`
+    nodes=`bspc query -N --desktop $desktop -n .!floating`
 
     if [ `echo "$nodes" | wc -l` -eq 1 ]; then
       echo "Removing borders on desktop $name"
