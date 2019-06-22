@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+# bspwm: external_rules_command
+
+id=${1?};
+instance=$3;
+class=$2;
+
+case $class in
+	# (Emacs) echo state=tiled\ layer=normal;;
+	('')
+		case $(ps -p "$(xdo pid $id)" -o comm= 2>/dev/null) in
+			(spotify) echo desktop=music;;
+		esac;;
+esac;
+
+# vim: set ft=sh :

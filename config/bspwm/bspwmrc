@@ -1,0 +1,85 @@
+#! /bin/sh
+
+############# Define startup items ###################
+
+# Set cursor to normal
+xsetroot -cursor_name left_ptr &
+
+autostart(){
+
+    # Gnome settings
+    /usr/lib/gsd-xsettings &
+
+    # Compositor
+    compton -b &
+    # Keyboard daemon
+    sxhkd &
+
+    # Wallpaper and colors
+    wal -Rs &
+
+    # Shared startup commands with Gnome
+    ~/.config/scripts/startup-configs.sh &>  /dev/null
+
+    # Restore redshift
+    ~/bin/redshift-ctrl restore &
+
+    # Wifi manager
+    nm-applet &
+
+    # Email client
+    mailspring -b &
+
+    # Automatic sleep
+    ~/.config/scripts/sleepScreenSetup.sh &
+
+    # Lock at suspend, hibernate etc
+    xss-lock -- ~/.config/scripts/lock.sh &
+
+    # Bar
+    ~/.config/polybar/launch.sh
+
+    # Make borders disappear if there is only one node on a desktop
+    ~/.config/bspwm/scripts/smart_border.sh &
+
+}
+
+bspc monitor -d 1 2 3 4 5 6 7 8 9 10 music
+
+padding=0
+
+bspc config top_padding     $padding
+bspc config bottom_padding  $padding
+bspc config right_padding   $padding
+bspc config left_padding    $padding
+
+bspc config border_width         2
+bspc config window_gap          12
+
+bspc config split_ratio          0.52
+bspc config borderless_monocle   true
+bspc config gapless_monocle      true
+
+bspc config focus_follows_pointer true
+bspc config pointer_modifier mod4
+
+##### Launch our startup items. ###############################
+# Using the heuristic that if sxhkd is running, we are probably
+# restarting bspwm and don't want to rerun the autostart commands
+pgrep sxhkd || autostart
+
+
+############# Colors ###############
+
+# source the colors.
+. "${HOME}/.cache/wal/colors.sh"
+
+# Set the border colors.
+# bspc config normal_border_color "$color1"
+# bspc config active_border_color "$color2"
+bspc config focused_border_color "$color1"
+
+bspc rule -a Gnome-calculator state=floating
+bspc rule -a stalonetray border=off
+
+bspc config external_rules_command "~/.config/bspwm/bspwm_rules";
