@@ -6,7 +6,6 @@
 #########################################################
 
 border_width=`bspc config border_width`
-echo $border_width
 
 # Gets the desktops we need to check
 get_desktops() {
@@ -26,10 +25,9 @@ get_desktops() {
   echo "$desktops"
 }
 
-
-bspc subscribe node_add node_remove node_transfer | while read -r event; do
-
-  desktops=`get_desktops "$event"`
+# Given a list of desktops, fixes the borders on each of them
+handle_desktops() {
+  desktops="$1"
   for desktop in $desktops; do
 
     name=` bspc query -D --desktop $desktop --names`
@@ -42,8 +40,24 @@ bspc subscribe node_add node_remove node_transfer | while read -r event; do
       echo "Replacing borders on desktop $name"
       bspc config -d $desktop border_width $border_width
     fi
+  done
+}
 
-  done # for loop
+# Fixes the borders on every desktop
+handle_all_desktops() {
+  handle_desktops "$(bspc query -D)"
+}
 
-done
+# Main loop: when a node event occurs, fix the relevant desktops
+main() {
+  bspc subscribe node_add node_remove node_transfer | while read -r event; do
+    desktops=`get_desktops "$event"`
+    handle_desktops "$desktops"
+  done
+}
+
+# We can also receive SIGUSR1 to force fixing all desktops
+trap "handle_all_desktops; main" SIGUSR1
+
+main
 

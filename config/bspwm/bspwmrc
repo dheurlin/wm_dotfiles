@@ -2,9 +2,6 @@
 
 ############# Define startup items ###################
 
-# Set cursor to normal
-xsetroot -cursor_name left_ptr &
-
 autostart(){
 
     # Gnome settings
@@ -73,7 +70,15 @@ bspc config left_monocle_padding    -$padding
 bspc config focus_follows_pointer true
 bspc config pointer_modifier mod4
 
-##### Launch our startup items. ###############################
+##### Commands to run at every (re)start ##################
+
+# Set cursor to normal
+xsetroot -cursor_name left_ptr &
+
+# Force smart borders to refresh
+killall -s SIGUSR1 smart_border.sh
+
+# Run autostart commands.
 # Using the heuristic that if sxhkd is running, we are probably
 # restarting bspwm and don't want to rerun the autostart commands
 pgrep sxhkd || autostart
