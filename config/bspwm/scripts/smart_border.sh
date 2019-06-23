@@ -21,6 +21,8 @@ get_desktops() {
     "node_transfer")
         desktops=`echo "$event" | awk '{print $3 " " $6}'`
      ;;
+    "node_state")
+        desktops=`echo "$event" | awk '{print $3}'`
   esac
   echo "$desktops"
 }
@@ -50,7 +52,7 @@ handle_all_desktops() {
 
 # Main loop: when a node event occurs, fix the relevant desktops
 main() {
-  bspc subscribe node_add node_remove node_transfer | while read -r event; do
+  bspc subscribe node_add node_remove node_transfer node_state | while read -r event; do
     desktops=`get_desktops "$event"`
     handle_desktops "$desktops"
   done
