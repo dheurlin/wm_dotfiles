@@ -147,11 +147,11 @@ super + {o,i}
 
 # Focus given desktop
 super + {1-9,0,m}
-	bspc desktop -f {1-9,0,music}
+	bspc desktop -f {1-9,10,music}
 
 # Send to given desktop
 super + shift + {1-9,0,m}
-	bspc node -d {1-9,0,music}
+	bspc node -d {1-9,10,music}
 
 #
 # preselect
