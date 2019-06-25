@@ -118,9 +118,14 @@ super + {p,b,comma,period}
 super + {_,shift + }c
 	bspc node -f {next,prev}.local
 
+
 # focus the next/previous desktop in the current monitor
 alt + {j,k}
 	bspc desktop -f {prev,next}.local.occupied
+	
+# Same effect from super + scrolling
+super + button{4,5}
+	bspc desktop -f {next,prev}.local.occupied
 
 # Go/send to the next empty desktop
 super + {n, shift + n}
