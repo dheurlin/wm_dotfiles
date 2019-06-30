@@ -5,9 +5,15 @@
 id=${1?};
 instance=$3;
 class=$2;
+title=$(xwininfo -id $id | sed -n '2p' | cut -d\" -f2)
+
+
+if [[ $instance = "vlc" && $title = "vlc" ]]; then
+    echo layer=above border=off
+fi
 
 case $class in
-	# (Emacs) echo state=tiled\ layer=normal;;
+	(Emacs) echo state=tiled\ layer=normal;;
 	('')
 		case $(ps -p "$(xdo pid $id)" -o comm= 2>/dev/null) in
 			(spotify) echo desktop=music;;
