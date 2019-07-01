@@ -14,6 +14,10 @@ fi
 
 case $class in
 	(Emacs) echo state=tiled\ layer=normal;;
+    (scribus)
+        if [[ $title == "Properties" ]]; then
+            echo state=tiled split_dir=west split_ratio=0.12
+        fi;;
 	('')
 		case $(ps -p "$(xdo pid $id)" -o comm= 2>/dev/null) in
 			(spotify) echo desktop=music;;
