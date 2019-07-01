@@ -15,7 +15,7 @@ fi
 case $class in
 	(Emacs) echo state=tiled\ layer=normal;;
     (scribus)
-        if [[ $title == "Properties" ]]; then
+        if [[ "$title" =~ ^(Properties|Layers|Align and Distribute)$ ]]; then
             echo state=tiled split_dir=west split_ratio=0.12
         fi;;
 	('')
