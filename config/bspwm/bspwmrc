@@ -2,7 +2,7 @@
 
 ############# Define startup items ###################
 
-autostart(){
+autostart() {
 
     # Gnome settings
     /usr/lib/gsd-xsettings &
