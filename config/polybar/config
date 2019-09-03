@@ -208,7 +208,7 @@ label-occupied-padding = ${self.label-mode-padding}
 ; empty = inactive workspace without stuff on it
 label-empty = %icon%
 label-empty-foreground = ${colors.foreground-alt}
-label-empty-padding = 1
+label-empty-padding = ${self.label-mode-padding}
 
 ; urgent = Workspace with urgency hint set
 label-urgent = %icon%

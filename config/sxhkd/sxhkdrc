@@ -64,6 +64,9 @@ super + ctrl + {b,n,r,c}
     {firefox-nightly, nautilus, kitty zsh -c -i 'ranger', gnome-calculator}
 
 
+super + alt + space
+    ~/scripts/dmenu-unicode/dmenu-unicode.sh
+
 ####### bspwm hotkeys #########################
 
 
