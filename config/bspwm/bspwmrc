@@ -46,7 +46,7 @@ autostart() {
 }
 
 external_monitor=$(xrandr --query | grep '^DP1')
-if [[ $external_monitor = *connected* ]]; then
+if [[ $external_monitor = *" connected"* ]]; then
     bspc monitor eDP1 -d 1 2 3 4 5 music
     bspc monitor DP1 -d 6 7 8 9 10
 else
