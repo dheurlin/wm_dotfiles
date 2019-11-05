@@ -1,5 +1,14 @@
 ###### wm independent hotkeys ##############
 
+###### Keyboard layout
+
+# toggle between layouts
+super + space
+    xkb-switch -n
+
+ctrl + Escape
+    xdotool key Caps_Lock
+
 ####### Media keys
 
 XF86AudioRaiseVolume
@@ -125,7 +134,7 @@ super + {_,shift + }c
 # focus the next/previous desktop in the current monitor
 alt + {j,k}
 	bspc desktop -f {prev,next}.local.occupied
-	
+
 # Same effect from super + scrolling
 super + button{4,5}
 	bspc desktop -f {next,prev}.local.occupied

@@ -8,7 +8,8 @@ xset r rate 200 30
 
 # Start by swapping capslock and escape
 setxkbmap -option
-setxkbmap -option -option caps:swapescape
+# setxkbmap -option -option caps:swapescape
+setxkbmap -layout se,us,gr,ru -option -option caps:escape
 # Temporarily map Escape to a random keycode, since xcape
 #    requires the key it's mapping to be assigned to someting
 xmodmap -e "keycode 255 = Escape"

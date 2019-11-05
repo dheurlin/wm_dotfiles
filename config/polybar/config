@@ -25,8 +25,8 @@ background-alt = $colors.background
 foreground = #fff
 ; foreground-alt = #888
 foreground-alt = #888
-primary   = ${xrdb:color2}
-secondary = ${xrdb:color2}
+primary   = ${xrdb:color5}
+secondary = ${xrdb:color5}
 alert = #bd2c40
 
 [bar/main]
@@ -62,9 +62,9 @@ font-1 = ${env:F1}
 # Only for the wifi icons
 font-2 = ${env:F2}
 
-modules-left = toggle-systray bspwm ws-new
+modules-left = toggle-systray bspwm
 ; modules-center = mpd
-modules-right = xbacklight pulseaudio redshift wlan battery date powermenu
+modules-right = xbacklight pulseaudio redshift xkeyboard wlan battery date powermenu
 
 ; tray-position = right
 tray-padding = 4
@@ -163,15 +163,18 @@ label = %title:0:30:...%
 type = internal/xkeyboard
 blacklist-0 = num lock
 
-format-prefix = " "
-format-prefix-foreground = ${colors.foreground-alt}
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground}
+format-spacing = 0
+; format = "%{A1:keyboard-layout &:}<label-layout> <label-indicator>%{A}"
 ; format-prefix-underline = ${colors.secondary}
 
 label-layout = %layout%
-label-layout-underline = ${colors.secondary}
+label-layout-padding = 0
+; label-layout-underline = ${colors.secondary}
 
-label-indicator-padding = 2
-label-indicator-margin = 1
+label-indicator-padding = 1
+label-indicator-margin = 0
 label-indicator-background = ${colors.secondary}
 label-indicator-underline = ${colors.secondary}
 
@@ -523,12 +526,12 @@ menu-0-1-exec = menu-open-2
 
 menu-1-0 = cancel
 menu-1-0-exec = menu-open-0
-menu-1-1 = reboot
+menu-1-1 = "reboot "
 menu-1-1-exec = reboot
 
 menu-2-0 = power off
 menu-2-0-exec = shutdown now
-menu-2-1 = cancel
+menu-2-1 = "cancel "
 menu-2-1-exec = menu-open-0
 
 [settings]
