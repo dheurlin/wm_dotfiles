@@ -17,5 +17,5 @@ $HOME/scripts/disable_trackpad_while_typing.py &
 # enable key rebinding
 xbindkeys
 
-sleep 1
-amixer -c PCH cset 'name=Headphone Mic Boost Volume' 1
+# sleep 1
+# amixer -c PCH cset 'name=Headphone Mic Boost Volume' 1
