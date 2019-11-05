@@ -18,7 +18,7 @@ set_all_padding() {
 
 set_padding_for_monitor() {
   # Adjusts the padding for a given monitor for a bar of the given height.
-  # NOTE: This assumes that we want the top padding as top padding
+  # NOTE: This assumes that we want the top padding as bottom padding
   monitor=$1
   height=$2
   let totalheight=`bspc config -m $monitor bottom_padding`+$height
