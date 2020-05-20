@@ -25,9 +25,6 @@ autostart() {
     # Wifi manager
     nm-applet &
 
-    # Email client
-    mailspring -b &
-
     # Automatic sleep
     ~/.config/scripts/sleepScreenSetup.sh &
 
@@ -102,5 +99,8 @@ bspc config focused_border_color "$color6"
 
 bspc rule -a Gnome-calculator state=floating
 bspc rule -a stalonetray border=off
+
+bspc rule -a kitty-nmtui state=floating
+bspc rule -a kitty-nmtui border=off
 
 bspc config external_rules_command "$HOME/.config/bspwm/bspwm_rules";

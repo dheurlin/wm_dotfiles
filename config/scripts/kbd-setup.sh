@@ -3,13 +3,13 @@ pkill xcape
 
 
 
-# Set key repeat speed
+#### Set key repeat speed
 xset r rate 200 30
 
 # Start by swapping capslock and escape
 setxkbmap -option
 # setxkbmap -option -option caps:swapescape
-setxkbmap -layout se,us,gr,ru -option -option caps:escape
+setxkbmap -layout se,us,pl,ru -option -option caps:escape
 # Temporarily map Escape to a random keycode, since xcape
 #    requires the key it's mapping to be assigned to someting
 xmodmap -e "keycode 255 = Escape"
@@ -19,3 +19,6 @@ xmodmap -e "keycode 66 = ISO_Level3_Shift"
 #   if tapped without any other key
 # pkill xcape
 xcape -e "ISO_Level3_Shift=Escape"
+
+## Map weird key left of 1 to dead_greek
+xmodmap -e "keycode 49 = dead_greek"
