@@ -64,7 +64,7 @@ font-2 = ${env:F2}
 
 modules-left = toggle-systray bspwm
 ; modules-center = mpd
-modules-right = xbacklight pulseaudio redshift xkeyboard wlan battery date powermenu
+modules-right = syrran xbacklight pulseaudio redshift xkeyboard wlan battery date powermenu
 
 ; tray-position = right
 tray-padding = 4
@@ -140,6 +140,18 @@ click-left = ~/.config/i3/workspace-new.py
 format = " + "
 ; format-foreground = ${colors.secondary}
 ; format-background = ${colors.background}
+;
+[module/syrran]
+type = custom/script
+exec = ~/.local/bin/hsyrran
+
+click-left = kill -USR1 %pid%
+
+format-prefix = " "
+format = <label>
+
+tail = true
+
 
 [module/redshift]
 type = custom/ipc
