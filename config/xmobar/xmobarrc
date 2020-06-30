@@ -13,9 +13,28 @@ Config { additionalFonts = []
        , iconRoot = "."
        , allDesktops = True
        , overrideRedirect = True
-       , commands = [ Run Date "%Y-%m-%d  %H:%M:%S" "date" 10
-                    , Run StdinReader]
+       , commands =
+          [ Run Date "%Y-%m-%d %H:%M:%S" "date" 10
+          , Run StdinReader
+          , Run BatteryP ["BAT0"]
+                ["-t", "Batt: <left>%"
+                , "--", "-l", "red", "-h", "green"
+                ] 600
+          , Run Volume "default" "Master" [] 10
+          , Run Brightness [] 10
+          , Run Kbd []
+          ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "  %StdinReader% }{ %date%  "
+       , template =
+          "  %StdinReader% }\
+          \{layout: %kbd%  %bright%  %default:Master% %battery%  %date%  "
        }
+
+-- Run BatteryP ["BAT0"]
+--              ["-t", "<acstatus><watts> (<left>%)",
+--               "-L", "10", "-H", "80", "-p", "3",
+--               "--", "-O", "<fc=green>On</fc> - ", "-i", "",
+--               "-L", "-15", "-H", "-5",
+--               "-l", "red", "-m", "blue", "-h", "green"]
+--              600

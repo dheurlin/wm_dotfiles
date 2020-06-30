@@ -25,6 +25,8 @@ myBindings =
   , ("M-p"  , dmenuRun)
   ]
 
+
+-- | XMobar setup
 myXmobar = statusBar ("xmobar " <> opts ) myXmobarPP toggleStrutsKey
  where opts = unwords [ "-F", "gray"
                       , "-B", show Col.bg
@@ -34,9 +36,6 @@ myXmobar = statusBar ("xmobar " <> opts ) myXmobarPP toggleStrutsKey
 myXmobarPP =
   xmobarPP { ppCurrent = xmobarColor "white" Col.accentBg . wrap " " " "
            }
-
--- ppCurrent = xmobarColor "yellow" "" . wrap "[" "]"
---                      , ppTitle   = xmobarColor "green"  "" . shorten 40
 
 -- | Binding to toggle xmobar gap
 toggleStrutsKey :: XConfig t -> (KeyMask, KeySym)
