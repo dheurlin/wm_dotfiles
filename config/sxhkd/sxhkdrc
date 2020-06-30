@@ -12,13 +12,13 @@ ctrl + Escape
 ####### Media keys
 
 XF86AudioRaiseVolume
-    ~/.config/scripts/volume.sh +5%
+    ~/.config/scripts/volume.sh 5%+
 
 XF86AudioLowerVolume
-    ~/.config/scripts/volume.sh -5%
+    ~/.config/scripts/volume.sh 5%-
 
 XF86AudioMute
-    pactl set-sink-mute @DEFAULT_SINK@ toggle
+    amixer set Master toggle
 
 XF86MonBrightnessUp
     xbacklight -inc 10

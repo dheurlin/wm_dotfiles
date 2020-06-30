@@ -6,8 +6,8 @@
 volSound=/home/danielheurlin/.config/scripts/sounds/bark.wav
 play_sound() { aplay $volSound; }
 
-pactl set-sink-mute @DEFAULT_SINK@ 0
-pactl set-sink-volume @DEFAULT_SINK@ $1
+amixer set Master $1
+amixer set Master unmute
 
 if ! pacmd list-sink-inputs | grep -c 'state: RUNNING'; then
     echo "playing"
