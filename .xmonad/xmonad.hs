@@ -5,13 +5,10 @@ import Vars
 import qualified Colors as Col
 
 import XMonad
-import XMonad.Core
 import XMonad.Config.Desktop
 import XMonad.Hooks.DynamicLog
 import XMonad.Util.EZConfig
 
-import Data.List
-import Control.Monad
 import System.Exit
 
 main = xmonad =<< myXmobar (desktopConfig
@@ -28,8 +25,18 @@ myBindings =
   , ("M-p"  , dmenuRun)
   ]
 
-myXmobar = statusBar ("xmobar " <> opts ) xmobarPP toggleStrutsKey
- where opts = unwords ["-F", "white", "-B", show Col.bg]
+myXmobar = statusBar ("xmobar " <> opts ) myXmobarPP toggleStrutsKey
+ where opts = unwords [ "-F", "gray"
+                      , "-B", show Col.bg
+                      , "-f", show $ "xft:" <> font
+                      ]
+
+myXmobarPP =
+  xmobarPP { ppCurrent = xmobarColor "white" Col.accentBg . wrap " " " "
+           }
+
+-- ppCurrent = xmobarColor "yellow" "" . wrap "[" "]"
+--                      , ppTitle   = xmobarColor "green"  "" . shorten 40
 
 -- | Binding to toggle xmobar gap
 toggleStrutsKey :: XConfig t -> (KeyMask, KeySym)

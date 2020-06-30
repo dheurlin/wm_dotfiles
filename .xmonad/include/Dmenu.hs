@@ -35,6 +35,7 @@ dmenuRun = liftIO $ spawn $
 dmenuOpts :: [String]
 dmenuOpts =
   [ "-sb", Col.accentBg -- selected background color
+  , "-fn", font
   ]
 
 confirm :: MonadIO m => String -> m () -> m ()
