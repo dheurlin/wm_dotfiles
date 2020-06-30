@@ -1,0 +1,23 @@
+Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
+       , additionalFonts = []
+       , borderColor = "black"
+       , border = BottomB
+       , bgColor = "black"
+       , fgColor = "grey"
+       , alpha = 255
+       , position = TopSize C 100 20
+       , textOffset = -1
+       , iconOffset = -1
+       , lowerOnStart = True
+       , pickBroadest = False
+       , persistent = False
+       , hideOnStart = False
+       , iconRoot = "."
+       , allDesktops = True
+       , overrideRedirect = True
+       , commands = [ Run Date "%Y-%m-%d  %H:%M:%S" "date" 10
+                    , Run StdinReader]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "  %StdinReader% }{ %date%  "
+       }

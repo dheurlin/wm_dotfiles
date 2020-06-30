@@ -13,3 +13,7 @@ run `stack install` again.
 ## Repl
 
 To open the XMonad config in GHCI, run `stack ghci xmonad.hs`
+
+## XMobar
+
+To get XMobar working, symlink `config/xmobar` to `~/.config/xmobar`
