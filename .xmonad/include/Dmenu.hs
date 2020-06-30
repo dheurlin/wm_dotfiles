@@ -2,6 +2,7 @@
 
 module Dmenu where
 
+import Util
 import Vars
 import qualified Colors as Col
 
@@ -23,6 +24,7 @@ dmenu' = menuArgs "dmenu" dmenuOpts
 dmenuRun :: MonadIO m => m ()
 dmenuRun = liftIO $ spawn $
   "/usr/bin/j4-dmenu-desktop "          <>
+    "--display-binary "                 <>
     "--dmenu=\"" <> dmenuCmd   <> "\" " <>
     "--term=\""  <> myTerminal <> "\""
  where
@@ -37,6 +39,6 @@ dmenuOpts =
 
 confirm :: MonadIO m => String -> m () -> m ()
 confirm query m = dmenu query ["yes", "cancel"] >>= \case
-  ans | init ans == "yes" -> m
-  _                       -> pure ()
+  ans | trim ans == "yes" -> m
+  a                       -> liftIO (putStrLn a)
 

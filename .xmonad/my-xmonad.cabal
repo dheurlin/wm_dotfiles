@@ -4,16 +4,16 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5fc71e01948d631cebac75d313e739a286962c791cff9d61041f5de3706aa4bc
+-- hash: ba4dd757da80b1cbdc1b62ebb67b2cb73179a69746f05b76fcd6225d4ec6ec94
 
 name:           my-xmonad
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/dheurlin/xmonad-config#readme.md>
-homepage:       https://github.com/githubuser/xmonad-config#readme
-bug-reports:    https://github.com/githubuser/xmonad-config/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2020 Author name here
+description:    Please see the README on GitHub at <https://github.com/dheurlin/wm_dotfiles/.xmonad>
+homepage:       https://github.com/dheurlin/wm_dotfiles#readme
+bug-reports:    https://github.com/dheurlin/wm_dotfiles/issues
+author:         Daniel Heurlin
+maintainer:     daniel.heurlin@gmail.com
+copyright:      2020 Daniel Heurlin
 license:        BSD3
 build-type:     Simple
 extra-source-files:
@@ -21,12 +21,13 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/xmonad-config
+  location: https://github.com/dheurlin/wm_dotfiles
 
 library
   exposed-modules:
       Colors
       Dmenu
+      Util
       Vars
   other-modules:
       Paths_my_xmonad
