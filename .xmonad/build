@@ -1,0 +1,7 @@
+#! /bin/sh
+
+set -e
+
+stack build :my-xmonad-exe
+stack install :my-xmonad-exe
+mv "/home/sagge/.local/bin/my-xmonad-exe" "$1"

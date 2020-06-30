@@ -1,0 +1,56 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: ba4dd757da80b1cbdc1b62ebb67b2cb73179a69746f05b76fcd6225d4ec6ec94
+
+name:           my-xmonad
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/dheurlin/wm_dotfiles/.xmonad>
+homepage:       https://github.com/dheurlin/wm_dotfiles#readme
+bug-reports:    https://github.com/dheurlin/wm_dotfiles/issues
+author:         Daniel Heurlin
+maintainer:     daniel.heurlin@gmail.com
+copyright:      2020 Daniel Heurlin
+license:        BSD3
+build-type:     Simple
+extra-source-files:
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/dheurlin/wm_dotfiles
+
+library
+  exposed-modules:
+      Colors
+      Dmenu
+      Util
+      Vars
+  other-modules:
+      Paths_my_xmonad
+  hs-source-dirs:
+      include
+  build-depends:
+      base >=4.7 && <5
+    , xmobar
+    , xmonad
+    , xmonad-contrib
+  default-language: Haskell2010
+
+executable my-xmonad-exe
+  main-is: xmonad.hs
+  other-modules:
+      Paths_my_xmonad
+  hs-source-dirs:
+      ./.
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -W -fforce-recomp
+  build-depends:
+      base >=4.7 && <5
+    , my-xmonad
+    , xmobar
+    , xmonad
+    , xmonad-contrib
+  default-language: Haskell2010

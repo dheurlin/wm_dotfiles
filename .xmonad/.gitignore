@@ -1,0 +1,10 @@
+xmobar-git/
+xmonad-contrib-git/
+xmonad-git/
+
+*.hi
+*.o
+*.errors
+.stack-work/
+stack.yaml.lock
+xmonad-x86_64-linux
