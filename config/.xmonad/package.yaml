@@ -1,0 +1,41 @@
+name:                my-xmonad
+version:             0.1.0.0
+github:              "githubuser/xmonad-config"
+license:             BSD3
+author:              "Author name here"
+maintainer:          "example@example.com"
+copyright:           "2020 Author name here"
+
+extra-source-files:
+- README.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/dheurlin/xmonad-config#readme.md>
+
+dependencies:
+- base >= 4.7 && < 5
+- xmonad-contrib
+- xmonad
+- xmobar
+
+library:
+  source-dirs: include
+
+executables:
+  my-xmonad-exe:
+    main:                xmonad.hs
+    source-dirs:         .
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    - -W
+    - -fforce-recomp
+    dependencies:
+    - my-xmonad
