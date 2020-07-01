@@ -1,4 +1,6 @@
 module Vars where
 
 myTerminal = "kitty --directory \"`xcwd`\""
-font       = "Dina:pixelsize=10"
+-- use "terminus-font-odb" package for this to work!
+font       = "Terminus:pixelsize=11"
+-- font       = "Dina:pixelsize=10"

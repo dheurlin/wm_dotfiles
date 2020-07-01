@@ -1,12 +1,11 @@
 module Util where
 
-import Data.Char
-import System.IO
-import Control.Monad.IO.Class
+import           Data.Char
+import           System.IO
+import           Control.Monad.IO.Class
 
 trim :: String -> String
-trim = f . f
-   where f = reverse . dropWhile isSpace
+trim = f . f where f = reverse . dropWhile isSpace
 
 printDebug :: (Show a, MonadIO m) => a -> m ()
 printDebug val =

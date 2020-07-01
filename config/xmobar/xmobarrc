@@ -1,5 +1,4 @@
-Config { additionalFonts = []
-       , borderColor = "black"
+Config { borderColor = "black"
        , bgColor = "black"
        , fgColor = "grey"
        , alpha = 255
@@ -10,20 +9,21 @@ Config { additionalFonts = []
        , pickBroadest = False
        , persistent = False
        , hideOnStart = False
-       , iconRoot = "."
+       , iconRoot = "/home/danielheurlin/.config/xmobar/xbm"
        , allDesktops = True
        , overrideRedirect = True
        , commands =
           [ Run Date "%Y-%m-%d %H:%M:%S" "date" 10
           , Run StdinReader
           , Run BatteryP ["BAT0"]
-                ["-t", "Batt: <left>% <acstatus>"
+                ["-t", "<icon=bat_full_02.xbm/> <left>%"
                 , "--", "-l", "red", "-h", "green"
                 , "-O", "(charging)", "-i", "(charging)", "-o", ""
                 ] 600
-          , Run Wireless "wlp58s0" ["-t", "<essid>: <quality>%"] 300
-          , Run Alsa "default" "Master" []
-          , Run Brightness [ "-t", "Backlight: <percent>%"
+          , Run Wireless "wlp58s0" ["-t", "<qualityipat> <essid>"
+                                   , "--", "--quality-icon-pattern=<icon=wifi2_0%%.xbm/>" ] 300
+          , Run Alsa "default" "Master" ["-t", "<icon=spkr_01.xbm/> <volume>% <status>"]
+          , Run Brightness [ "-t", "<icon=half.xbm/> <percent>%"
                            , "--", "-D", "intel_backlight"] 10
           , Run Kbd []
           ]
@@ -31,5 +31,10 @@ Config { additionalFonts = []
        , alignSep = "}{"
        , template =
           "  %StdinReader% }\
-          \{Layout: %kbd%  %bright%  %alsa:default:Master% %wlp58s0wi%  %battery%  %date%  "
+          \{<icon=kbd.xbm/> %kbd%  \
+          \%bright%  \
+          \%alsa:default:Master% \
+          \%wlp58s0wi%  \
+          \%battery%  \
+          \%date%  "
        }
