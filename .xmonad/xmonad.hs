@@ -1,3 +1,6 @@
+{-# LANGUAGE LambdaCase #-}
+
+import           Util
 import           Vars
 import           Bindings                       ( myBindings )
 import qualified Colors                        as Col
@@ -10,18 +13,22 @@ import           XMonad.Layout.NoBorders
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Util.SpawnOnce
+import           XMonad.Hooks.DynamicProperty
 
 import           Control.Monad
 import           Data.Maybe
+import           Data.Char
+import           Data.Semigroup
 
 main = xmonad =<< myXmobar
   (                 desktopConfig
       { terminal           = myTerminal
       , modMask            = mod4Mask
+      , workspaces         = map show [1..10] <> ["(music)"]
       , layoutHook         = myLayout
       , normalBorderColor  = Col.unFocusedBorder
       , focusedBorderColor = Col.focusedBorder
-      , handleEventHook = handleEventHook desktopConfig <> fullscreenEventHook
+      , handleEventHook    = handleEventHook desktopConfig <> myHandleEventHook
       , manageHook         = myManageHook
       , startupHook        = startupHook desktopConfig
                              >> addEWMHFullscreen
@@ -57,12 +64,27 @@ myXmobar = statusBar ("xmobar " <> opts) myXmobarPP toggleStrutsKey
  where
   opts = unwords ["-F", "gray", "-B", show Col.bg, "-f", show $ "xft:" <> font]
 
-myXmobarPP =
-  xmobarPP { ppCurrent = xmobarColor "white" Col.accentBg . wrap " " " " }
+myXmobarPP = xmobarPP
+  { ppCurrent = xmobarColor "white" Col.accentBg . wrap " " " " . ppWorkspace
+
+   -- only print non-numeric empty ws
+  , ppHiddenNoWindows = \case
+      str | all isNumber str -> ""
+          | otherwise        -> ppWorkspace str
+
+  , ppVisible         = ppVisible xmobarPP . ppWorkspace
+  , ppHidden          = ppHidden  xmobarPP . ppWorkspace
+  , ppUrgent          = ppUrgent  xmobarPP . ppWorkspace
+  }
 
 -- | Binding to toggle xmobar gap
 toggleStrutsKey :: XConfig t -> (KeyMask, KeySym)
 toggleStrutsKey XConfig{modMask = modm} = (modm, xK_b )
+
+-- | Formatting for special workspaces
+ppWorkspace :: String -> String
+ppWorkspace "(music)" = "<icon=music.xbm/>"
+ppWorkspace s         = s
 
 
 -- Layouts --------------------------------------------------------------------
@@ -80,9 +102,17 @@ myLayout = tiled ||| Mirror tiled ||| noBorders Full
   -- Percent of screen to increment by when resizing panes
   delta   = 3 / 100
 
--- Manage Hooks ---------------------------------------------------------------
+-- Hooks ----------------------------------------------------------------------
 myManageHook :: ManageHook
-myManageHook = mconcat [manageDocks]
+myManageHook = mconcat
+  [ manageDocks
+  ]
+
+myHandleEventHook :: Event -> X All
+myHandleEventHook = mconcat
+  [ fullscreenEventHook
+  , dynamicPropertyChange "WM_NAME" (title =? "Spotify" --> doShift "(music)")
+  ]
 
 
 -- Add support for NET_WM_FULLSCREEN ------------------------------------------

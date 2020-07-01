@@ -4,6 +4,7 @@ import           Navigation
 import           Dmenu
 
 import           XMonad
+import qualified XMonad.StackSet               as SS
 
 import           System.Exit
 
@@ -17,6 +18,8 @@ myBindings =
   , ("M-p"  , dmenuRun)
   , ("M1-j" , windows prevWS)
   , ("M1-k" , windows nextWS)
+  , ("M-0"  , windows $ SS.view "10")
+  , ("M-m"  , windows $ SS.view "(music)")
   -- Keyboard layout ----------------------------------------------------------
   , ("M-M1-<Space>", spawn "xkb-switch -n"     ) -- toggle between layouts
   , ("C-<Esc>"  , spawn "xdotool key Caps_Lock")
