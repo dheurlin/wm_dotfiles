@@ -38,7 +38,7 @@ spawnTrayer :: X ()
 spawnTrayer = do
   spawnOnce $ "trayer " <> trayeropts
   -- Put trayer below fullscreen windows
-  spawnOnce "xdo above -t \"$(xdo id -n xmobar)\" \"$(xdo id -N trayer -m)\""
+  spawn "xdo above -t \"$(xdo id -n xmobar)\" \"$(xdo id -N trayer -m)\""
  where
    trayeropts = unwords [ "--widthtype"    , "request"
                         , "--align"        , "right"

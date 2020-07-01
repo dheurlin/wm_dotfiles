@@ -24,15 +24,17 @@ dmenu' :: MonadIO m => [String] -> m String
 dmenu' = menuArgs "dmenu" dmenuOpts
 
 dmenuRun :: MonadIO m => m ()
-dmenuRun = liftIO $ spawn $
-  "/usr/bin/j4-dmenu-desktop "          <>
-    "--display-binary "                 <>
-    "--dmenu=\"" <> dmenuCmd   <> "\" " <>
-    "--term=\""  <> myTerminal <> "\""
+dmenuRun =
+  liftIO . spawn
+    $  "/usr/bin/j4-dmenu-desktop --display-binary "
+    <> "--dmenu=\"" <> dmenuCmd   <> "\" "
+    <> "--term=\""  <> myTerminal <> "\""
  where
-  dmenuCmd = "dmenu -i " <> (intercalate " " optsEscapeColors)
+  dmenuCmd =
+    "(cat ; (stest -flx $(echo $PATH | tr : ' ') | sort -u)) | dmenu -i "
+      <> unwords optsEscapeColors
   optsEscapeColors =
-    [ if head s == '#' then "'" <> s <> "'" else s | s <- dmenuOpts]
+    [ if head s == '#' then "'" <> s <> "'" else s | s <- dmenuOpts ]
 
 dmenuOpts :: [String]
 dmenuOpts =
