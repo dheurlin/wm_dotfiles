@@ -1,4 +1,4 @@
 module Vars where
 
-myTerminal = "kitty"
+myTerminal = "kitty --directory \"`xcwd`\""
 font = "Dina:pixelsize=10"
