@@ -9,12 +9,13 @@ import           XMonad.Util.EZConfig
 import           XMonad.Layout.NoBorders
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.EwmhDesktops
+import           XMonad.Util.SpawnOnce
 
 import           Control.Monad
 import           Data.Maybe
 
 main = xmonad =<< myXmobar
-  ( desktopConfig
+  (                 desktopConfig
       { terminal           = myTerminal
       , modMask            = mod4Mask
       , layoutHook         = myLayout
@@ -22,10 +23,31 @@ main = xmonad =<< myXmobar
       , focusedBorderColor = Col.focusedBorder
       , handleEventHook = handleEventHook desktopConfig <> fullscreenEventHook
       , manageHook         = myManageHook
-      , startupHook        = startupHook desktopConfig >> addEWMHFullscreen
+      , startupHook        = startupHook desktopConfig
+                             >> addEWMHFullscreen
+                             >> myStartupItems
       }
   `additionalKeysP` myBindings
   )
+
+-- Startup items --------------------------------------------------------------
+myStartupItems :: X ()
+myStartupItems = sequence_ [ spawnOnce $ "trayer " <> trayeropts ]
+  where
+   trayeropts = unwords [ "--widthtype"    , "request"
+                        -- , "--width"        , "100"
+                        , "--align"        , "right"
+                        , "--height"       , "14"
+                        , "--edge"         , "top"
+                        , "--distancefrom" , "right"
+                        , "--distance"     , "590"
+                        -- , "--distance"     , "1320"
+                        , "--transparent"  , "true"
+                        , "--alpha"        , "0"
+                        , "--tint"         , show $ "0x" <> tail Col.bg
+                        , "--iconspacing"  , "7"
+                        ]
+
 
 -- XMobar setup ---------------------------------------------------------------
 myXmobar = statusBar ("xmobar " <> opts) myXmobarPP toggleStrutsKey
