@@ -52,6 +52,7 @@ extra-deps:
 flags:
   xmobar:
     all_extensions: true
+    with_iwlib: true
 
 # Extra package databases containing global packages
 # extra-package-dbs: []

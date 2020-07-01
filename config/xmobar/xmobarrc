@@ -17,24 +17,19 @@ Config { additionalFonts = []
           [ Run Date "%Y-%m-%d %H:%M:%S" "date" 10
           , Run StdinReader
           , Run BatteryP ["BAT0"]
-                ["-t", "Batt: <left>%"
+                ["-t", "Batt: <left>% <acstatus>"
                 , "--", "-l", "red", "-h", "green"
+                , "-O", "(charging)", "-i", "(charging)", "-o", ""
                 ] 600
-          , Run Volume "default" "Master" [] 10
-          , Run Brightness [] 10
+          , Run Wireless "wlp58s0" ["-t", "<essid>: <quality>%"] 300
+          , Run Alsa "default" "Master" []
+          , Run Brightness [ "-t", "Backlight: <percent>%"
+                           , "--", "-D", "intel_backlight"] 10
           , Run Kbd []
           ]
        , sepChar = "%"
        , alignSep = "}{"
        , template =
           "  %StdinReader% }\
-          \{layout: %kbd%  %bright%  %default:Master% %battery%  %date%  "
+          \{Layout: %kbd%  %bright%  %alsa:default:Master% %wlp58s0wi%  %battery%  %date%  "
        }
-
--- Run BatteryP ["BAT0"]
---              ["-t", "<acstatus><watts> (<left>%)",
---               "-L", "10", "-H", "80", "-p", "3",
---               "--", "-O", "<fc=green>On</fc> - ", "-i", "",
---               "-L", "-15", "-H", "-5",
---               "-l", "red", "-m", "blue", "-h", "green"]
---              600
