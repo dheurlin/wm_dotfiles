@@ -32,22 +32,25 @@ main = xmonad =<< myXmobar
 
 -- Startup items --------------------------------------------------------------
 myStartupItems :: X ()
-myStartupItems = sequence_ [ spawnOnce $ "trayer " <> trayeropts ]
-  where
+myStartupItems = sequence_ [ spawnTrayer ]
+
+spawnTrayer :: X ()
+spawnTrayer = do
+  spawnOnce $ "trayer " <> trayeropts
+  -- Put trayer below fullscreen windows
+  spawnOnce "xdo above -t \"$(xdo id -n xmobar)\" \"$(xdo id -N trayer -m)\""
+ where
    trayeropts = unwords [ "--widthtype"    , "request"
-                        -- , "--width"        , "100"
                         , "--align"        , "right"
                         , "--height"       , "14"
                         , "--edge"         , "top"
                         , "--distancefrom" , "right"
                         , "--distance"     , "590"
-                        -- , "--distance"     , "1320"
                         , "--transparent"  , "true"
                         , "--alpha"        , "0"
                         , "--tint"         , show $ "0x" <> tail Col.bg
                         , "--iconspacing"  , "7"
                         ]
-
 
 -- XMobar setup ---------------------------------------------------------------
 myXmobar = statusBar ("xmobar " <> opts) myXmobarPP toggleStrutsKey
