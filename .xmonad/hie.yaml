@@ -1,0 +1,17 @@
+# cradle:
+#   stack:
+#     # - path: "./test/functional/"
+#     #   component: "haskell-ide-engine:test:func-test"
+#     # - path: "./test/unit/"
+#     #   component: "haskell-ide-engine:test:unit-test"
+#     # - path: "./hie-plugin-api/"
+#     #   component: "hie-plugin-api:lib"
+#     # - path: "./app/MainHie.hs"
+#     #   component: "haskell-ide-engine:exe:hie"
+#     # - path: "./app/HieWrapper.hs"
+#     #   component: "haskell-ide-engine:exe:hie-wrapper"
+#     - path: "./"
+#       component: "my-xmonad-config:exe:my-xmonad-config-exe"
+cradle:
+  stack:
+    component: "my-xmonad:lib"
