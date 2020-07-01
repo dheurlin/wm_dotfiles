@@ -10,15 +10,15 @@ import System.Exit
 myBindings :: [(String, X ())]
 myBindings =
   [ -- XMonad stuff -------------------------------------------------
-    ("M-S-q", confirm "Quit XMonad?" $ liftIO (exitWith ExitSuccess))
+    ("M-S-q", confirm "Quit XMonad?" $ liftIO exitSuccess           )
   , ("M-q"  , confirm "Restart XMonad?"   $ spawn "xmonad --restart")
   , ("M-S-r", confirm "Recompile and restart XMonad?"
-                $ spawn "xmonad --recompile && xmonad --restart")
+                $ spawn "xmonad --recompile && xmonad --restart"    )
   , ("M-p"  , dmenuRun)
   , ("M1-j" , windows prevWS)
   , ("M1-k" , windows nextWS)
   -- Keyboard layout ----------------------------------------------------------
-  , ("M-<Space>", spawn "xkb-switch -n"        ) -- toggle between layouts
+  , ("M-M1-<Space>", spawn "xkb-switch -n"     ) -- toggle between layouts
   , ("C-<Esc>"  , spawn "xdotool key Caps_Lock")
   -- Media Keys ---------------------------------------------------------------
   , ("<XF86AudioRaiseVolume>"    , spawn "~/.config/scripts/volume.sh 5%+")
