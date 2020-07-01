@@ -21,8 +21,8 @@ myBindings =
   , ("M-0"  , windows $ SS.view "10")
   , ("M-m"  , windows $ SS.view "(music)")
   -- Keyboard layout ----------------------------------------------------------
-  , ("M-M1-<Space>", spawn "xkb-switch -n"     ) -- toggle between layouts
-  , ("C-<Esc>"  , spawn "xdotool key Caps_Lock")
+  , ("M-M1-<Space>", spawn "xkb-switch -n"        ) -- toggle between layouts
+  , ("C-<Esc>"     , spawn "xdotool key Caps_Lock")
   -- Media Keys ---------------------------------------------------------------
   , ("<XF86AudioRaiseVolume>"    , spawn "~/.config/scripts/volume.sh 5%+")
   , ("<XF86AudioLowerVolume>"    , spawn "~/.config/scripts/volume.sh 5%-")

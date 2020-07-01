@@ -23,6 +23,7 @@ dmenu prompt = menuArgs "dmenu" $ ["-p", prompt] <> dmenuOpts
 dmenu' :: MonadIO m => [String] -> m String
 dmenu' = menuArgs "dmenu" dmenuOpts
 
+-- | Opens a dmenu run prompt which lists binaries and .desktop files
 dmenuRun :: MonadIO m => m ()
 dmenuRun =
   liftIO . spawn
@@ -31,7 +32,8 @@ dmenuRun =
     <> "--term=\""  <> myTerminal <> "\""
  where
   dmenuCmd =
-    "(cat ; (stest -flx $(echo $PATH | tr : ' ') | sort -u)) | dmenu -i "
+    "(cat ; (stest -flx $(echo $PATH | tr : ' ') | sort -u)) | "
+      <> "dmenu -i -p Run: "
       <> unwords optsEscapeColors
   optsEscapeColors =
     [ if head s == '#' then "'" <> s <> "'" else s | s <- dmenuOpts ]

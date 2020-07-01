@@ -1,6 +1,5 @@
 {-# LANGUAGE LambdaCase #-}
 
-import           Util
 import           Vars
 import           Bindings                       ( myBindings )
 import qualified Colors                        as Col
@@ -8,6 +7,9 @@ import qualified Colors                        as Col
 import           XMonad
 import           XMonad.Config.Desktop
 import           XMonad.Hooks.DynamicLog
+import           XMonad.Hooks.ManageHelpers
+import           XMonad.StackSet                ( RationalRect(..) )
+-- import           XMonad.ManageHook
 import           XMonad.Util.EZConfig
 import           XMonad.Layout.NoBorders
 import           XMonad.Hooks.ManageDocks
@@ -72,9 +74,9 @@ myXmobarPP = xmobarPP
       str | all isNumber str -> ""
           | otherwise        -> ppWorkspace str
 
-  , ppVisible         = ppVisible xmobarPP . ppWorkspace
-  , ppHidden          = ppHidden  xmobarPP . ppWorkspace
-  , ppUrgent          = ppUrgent  xmobarPP . ppWorkspace
+  , ppVisible = ppVisible xmobarPP . ppWorkspace
+  , ppHidden  = ppHidden  xmobarPP . ppWorkspace
+  , ppUrgent  = ppUrgent  xmobarPP . ppWorkspace
   }
 
 -- | Binding to toggle xmobar gap
@@ -105,8 +107,13 @@ myLayout = tiled ||| Mirror tiled ||| noBorders Full
 -- Hooks ----------------------------------------------------------------------
 myManageHook :: ManageHook
 myManageHook = mconcat
-  [ manageDocks
+  [ stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog"
+      --> doRectFloat (RationalRect 0.2 0.1 0.6 0.8)
+
+  , manageDocks
   ]
+
+-- doRectFloat
 
 myHandleEventHook :: Event -> X All
 myHandleEventHook = mconcat
