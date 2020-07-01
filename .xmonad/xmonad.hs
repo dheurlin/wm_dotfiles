@@ -45,7 +45,7 @@ spawnTrayer = do
                         , "--height"       , "14"
                         , "--edge"         , "top"
                         , "--distancefrom" , "right"
-                        , "--distance"     , "590"
+                        , "--distance"     , "652"
                         , "--transparent"  , "true"
                         , "--alpha"        , "0"
                         , "--tint"         , show $ "0x" <> tail Col.bg

@@ -16,7 +16,7 @@ Config { borderColor = "black"
           [ Run Date "%Y-%m-%d %H:%M:%S" "date" 10
           , Run StdinReader
           , Run BatteryP ["BAT0"]
-                ["-t", "<icon=bat_full_02.xbm/> <left>%"
+                ["-t", "<icon=bat_full_02.xbm/> <left>% <acstatus>"
                 , "--", "-l", "red", "-h", "green"
                 , "-O", "(charging)", "-i", "(charging)", "-o", ""
                 ] 600
@@ -26,15 +26,35 @@ Config { borderColor = "black"
           , Run Brightness [ "-t", "<icon=half.xbm/> <percent>%"
                            , "--", "-D", "intel_backlight"] 10
           , Run Kbd []
+          , Run Com "/home/danielheurlin/bin/redshift-ctrl" ["get"] "redshift" 10
           ]
-       , sepChar = "%"
+       , sepChar = "^"
        , alignSep = "}{"
        , template =
-          "  %StdinReader% }\
-          \{<icon=kbd.xbm/> %kbd%  \
-          \%bright%  \
-          \%alsa:default:Master% \
-          \%wlp58s0wi%  \
-          \%battery%  \
-          \%date%  "
+          "  ^StdinReader^ }{\
+
+          \<action=`/home/danielheurlin/bin/redshift-ctrl scrollup`   button=4>\
+          \<action=`/home/danielheurlin/bin/redshift-ctrl scrolldown` button=5>\
+              \<icon=ghost.xbm/> ^redshift^  \
+          \</action></action>\
+
+          \<action=`xkb-switch -n` button=1>\
+              \<icon=kbd.xbm/> ^kbd^  \
+         \</action>\
+
+          \<action=`xbacklight -inc 5` button=4><action=`xbacklight -dec 5` button=5>\
+              \^bright^  \
+          \</action></action>\
+
+          \<action=`amixer set Master 1%+` button=4>\
+          \<action=`amixer set Master 1%-` button=5>\
+          \<action=`amixer set Master toggle` button=1>\
+              \^alsa:default:Master^ \
+          \</action></action></action>\
+
+          \^wlp58s0wi^  \
+
+          \^battery^  \
+
+          \^date^  "
        }
