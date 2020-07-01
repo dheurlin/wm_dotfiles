@@ -1,31 +1,39 @@
-import Vars
-import Bindings ( myBindings )
-import qualified Colors as Col
+import           Vars
+import           Bindings                       ( myBindings )
+import qualified Colors                        as Col
 
-import XMonad
-import XMonad.Config.Desktop
-import XMonad.Hooks.DynamicLog
-import XMonad.Util.EZConfig
-import XMonad.Layout.NoBorders
+import           XMonad
+import           XMonad.Config.Desktop
+import           XMonad.Hooks.DynamicLog
+import           XMonad.Util.EZConfig
+import           XMonad.Layout.NoBorders
+import           XMonad.Hooks.ManageDocks
+import           XMonad.Hooks.EwmhDesktops
 
-main = xmonad =<< myXmobar (desktopConfig
-  { terminal = myTerminal
-  , modMask = mod4Mask
-  , layoutHook = myLayout
-  , normalBorderColor = Col.unFocusedBorder
-  , focusedBorderColor = Col.focusedBorder
-  } `additionalKeysP` myBindings)
+import           Control.Monad
+import           Data.Maybe
+
+main = xmonad =<< myXmobar
+  ( desktopConfig
+      { terminal           = myTerminal
+      , modMask            = mod4Mask
+      , layoutHook         = myLayout
+      , normalBorderColor  = Col.unFocusedBorder
+      , focusedBorderColor = Col.focusedBorder
+      , handleEventHook = handleEventHook desktopConfig <> fullscreenEventHook
+      , manageHook         = myManageHook
+      , startupHook        = startupHook desktopConfig >> addEWMHFullscreen
+      }
+  `additionalKeysP` myBindings
+  )
 
 -- XMobar setup ---------------------------------------------------------------
-myXmobar = statusBar ("xmobar " <> opts ) myXmobarPP toggleStrutsKey
- where opts = unwords [ "-F", "gray"
-                      , "-B", show Col.bg
-                      , "-f", show $ "xft:" <> font
-                      ]
+myXmobar = statusBar ("xmobar " <> opts) myXmobarPP toggleStrutsKey
+ where
+  opts = unwords ["-F", "gray", "-B", show Col.bg, "-f", show $ "xft:" <> font]
 
 myXmobarPP =
-  xmobarPP { ppCurrent = xmobarColor "white" Col.accentBg . wrap " " " "
-           }
+  xmobarPP { ppCurrent = xmobarColor "white" Col.accentBg . wrap " " " " }
 
 -- | Binding to toggle xmobar gap
 toggleStrutsKey :: XConfig t -> (KeyMask, KeySym)
@@ -46,3 +54,30 @@ myLayout =  tiled ||| Mirror tiled ||| noBorders Full
 
      -- Percent of screen to increment by when resizing panes
      delta   = 3/100
+
+-- Manage Hooks ---------------------------------------------------------------
+
+myManageHook :: ManageHook
+myManageHook = mconcat [manageDocks]
+
+
+-- Add support for NET_WM_FULLSCREEN ------------------------------------------
+addNETSupported :: Atom -> X ()
+addNETSupported x = withDisplay $ \dpy -> do
+  r               <- asks theRoot
+  a_NET_SUPPORTED <- getAtom "_NET_SUPPORTED"
+  a               <- getAtom "ATOM"
+  liftIO $ do
+    sup <- join . maybeToList <$> getWindowProperty32 dpy a_NET_SUPPORTED r
+    when (fromIntegral x `notElem` sup) $ changeProperty32 dpy
+                                                           r
+                                                           a_NET_SUPPORTED
+                                                           a
+                                                           propModeAppend
+                                                           [fromIntegral x]
+
+addEWMHFullscreen :: X ()
+addEWMHFullscreen = do
+  wms <- getAtom "_NET_WM_STATE"
+  wfs <- getAtom "_NET_WM_STATE_FULLSCREEN"
+  mapM_ addNETSupported [wms, wfs]

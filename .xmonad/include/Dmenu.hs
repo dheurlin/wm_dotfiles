@@ -2,16 +2,18 @@
 
 module Dmenu where
 
-import Util
-import Vars
-import qualified Colors as Col
+import           Util
+import           Vars
+import qualified Colors                        as Col
 
-import XMonad
-import XMonad.Core
-import XMonad.Util.Dmenu ( menu, menuArgs )
+import           XMonad
+import           XMonad.Core
+import           XMonad.Util.Dmenu              ( menu
+                                                , menuArgs
+                                                )
 
-import Data.List
-import Control.Monad
+import           Data.List
+import           Control.Monad
 
 -- | Displays dmenu with a prompt
 dmenu :: MonadIO m => String -> [String] -> m String

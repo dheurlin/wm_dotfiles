@@ -1,11 +1,11 @@
 module Bindings where
 
-import Navigation
-import Dmenu
+import           Navigation
+import           Dmenu
 
-import XMonad
+import           XMonad
 
-import System.Exit
+import           System.Exit
 
 myBindings :: [(String, X ())]
 myBindings =
