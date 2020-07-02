@@ -23,6 +23,8 @@ dependencies:
 - xmonad-contrib
 - xmonad
 - xmobar
+- random
+- containers
 
 library:
   source-dirs: include

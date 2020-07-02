@@ -5,13 +5,15 @@ import           Dmenu
 
 import           XMonad
 import qualified XMonad.StackSet               as SS
+import           XMonad.Hooks.ManageDocks
 
 import           System.Exit
 
 myBindings :: [(String, X ())]
 myBindings =
   [ -- XMonad stuff -------------------------------------------------
-    ("M-S-q", confirm "Quit XMonad?" $ liftIO exitSuccess           )
+    ("M-b"  , sendMessage ToggleStruts                              )
+  , ("M-S-q", confirm "Quit XMonad?" $ liftIO exitSuccess           )
   , ("M-q"  , confirm "Restart XMonad?"   $ spawn "xmonad --restart")
   , ("M-S-r", confirm "Recompile and restart XMonad?"
                 $ spawn "xmonad --recompile && xmonad --restart"    )

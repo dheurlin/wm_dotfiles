@@ -1,5 +1,7 @@
-{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE LambdaCase        #-}
+{-# LANGUAGE FlexibleContexts  #-}
 
+import           Util
 import           Vars
 import           Bindings                       ( myBindings )
 import qualified Colors                        as Col
@@ -8,19 +10,24 @@ import           XMonad
 import           XMonad.Config.Desktop
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageHelpers
-import           XMonad.StackSet                ( RationalRect(..) )
--- import           XMonad.ManageHook
+import           XMonad.StackSet                ( RationalRect(..)
+                                                , floating
+                                                )
 import           XMonad.Util.EZConfig
 import           XMonad.Layout.NoBorders
+import           XMonad.Layout.LayoutModifier
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Util.SpawnOnce
+import           XMonad.Util.Run
 import           XMonad.Hooks.DynamicProperty
 
 import           Control.Monad
 import           Data.Maybe
 import           Data.Char
 import           Data.Semigroup
+import qualified Data.Map                      as M
+import           Data.Functor
 
 main = xmonad =<< myXmobar
   (                 desktopConfig
@@ -50,21 +57,54 @@ spawnTrayer = do
   spawn "xdo above -t \"$(xdo id -n xmobar)\" \"$(xdo id -N trayer -m)\""
  where
    trayeropts = unwords [ "--widthtype"    , "request"
-                        , "--align"        , "right"
                         , "--height"       , "14"
                         , "--edge"         , "top"
-                        , "--distancefrom" , "right"
-                        , "--distance"     , "652"
+                        , "--align"        , "left"
+                        , "--distancefrom" , "left"
+                        , "--distance"     , "5"
                         , "--transparent"  , "true"
                         , "--alpha"        , "0"
                         , "--tint"         , show $ "0x" <> tail Col.bg
-                        , "--iconspacing"  , "7"
+                        , "--iconspacing"  , "5"
                         ]
 
+-- | Gets the current with of the system tray in pixels
+getTrayWidth :: IO Int
+getTrayWidth =
+  readProcess "xdo" ["id", "-N", "trayer"]
+    <&> (["getwindowgeometry"] <>) . (: [])
+    >>= readProcess "xdotool"
+    <&> lines
+    <&> filter ((== "  Geometry") . take 10)
+    <&> read . takeWhile isNumber . dropWhile (not . isNumber) . head
+
+-- | Gets the current with of the system tray in characters of the bar font
+trayWidthChars :: IO Int
+trayWidthChars = getTrayWidth <&> (// (fontWidth - 3))
+
 -- XMobar setup ---------------------------------------------------------------
-myXmobar = statusBar ("xmobar " <> opts) myXmobarPP toggleStrutsKey
+myStatusBar
+  :: LayoutClass l Window
+  => String
+  -> PP
+  -> (String -> IO String)
+  -> XConfig l
+  -> IO (XConfig (ModifiedLayout AvoidStruts l))
+myStatusBar cmd pp modifyOutput conf = do
+  h <- spawnPipe cmd
+  return $ docks $ conf
+    { layoutHook = avoidStruts (layoutHook conf)
+    , logHook    = do
+        logHook conf
+        dynamicLogWithPP pp { ppOutput = modifyOutput >=> hPutStrLn h }
+    }
+
+myXmobar = myStatusBar ("xmobar " <> opts) myXmobarPP modifyOutput
  where
   opts = unwords ["-F", "gray", "-B", show Col.bg, "-f", show $ "xft:" <> font]
+  modifyOutput s = do
+    numSpaces <- trayWidthChars
+    pure $ replicate (numSpaces + 1) ' ' <> "| " <> s
 
 myXmobarPP = xmobarPP
   { ppCurrent = xmobarColor "white" Col.accentBg . wrap " " " " . ppWorkspace
@@ -79,18 +119,15 @@ myXmobarPP = xmobarPP
   , ppUrgent  = ppUrgent  xmobarPP . ppWorkspace
   }
 
--- | Binding to toggle xmobar gap
-toggleStrutsKey :: XConfig t -> (KeyMask, KeySym)
-toggleStrutsKey XConfig{modMask = modm} = (modm, xK_b )
-
 -- | Formatting for special workspaces
 ppWorkspace :: String -> String
 ppWorkspace "(music)" = "<icon=music.xbm/>"
 ppWorkspace s         = s
 
 
+
 -- Layouts --------------------------------------------------------------------
-myLayout = tiled ||| Mirror tiled ||| noBorders Full
+myLayout = lessBorders AllFloats $ tiled ||| Mirror tiled ||| noBorders Full
  where
    -- default tiling algorithm partitions the screen into two panes
   tiled   = smartBorders $ Tall nmaster delta ratio
@@ -104,12 +141,17 @@ myLayout = tiled ||| Mirror tiled ||| noBorders Full
   -- Percent of screen to increment by when resizing panes
   delta   = 3 / 100
 
+-- | Removes borders from fullscreen floating windows
+data AllFloats = AllFloats deriving (Read, Show)
+
+instance SetsAmbiguous AllFloats where
+    hiddens _ wset _ _ _ = M.keys $ floating wset
+
 -- Hooks ----------------------------------------------------------------------
 myManageHook :: ManageHook
 myManageHook = mconcat
   [ stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog"
       --> doRectFloat (RationalRect 0.2 0.1 0.6 0.8)
-
   , manageDocks
   ]
 

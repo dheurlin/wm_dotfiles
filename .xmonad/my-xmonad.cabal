@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a867dc0ca7ce4866906e8f9f5202efe7ac02d60e70b8882d2dcf605c07b8ee6b
+-- hash: a6752dfa86e1d4fd08a54677c32e3fa6309d93fce746db19e3da556069361fbf
 
 name:           my-xmonad
 version:        0.1.0.0
@@ -37,6 +37,8 @@ library
       include
   build-depends:
       base >=4.7 && <5
+    , containers
+    , random
     , xmobar
     , xmonad
     , xmonad-contrib
@@ -51,7 +53,9 @@ executable my-xmonad-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -W -fforce-recomp
   build-depends:
       base >=4.7 && <5
+    , containers
     , my-xmonad
+    , random
     , xmobar
     , xmonad
     , xmonad-contrib
