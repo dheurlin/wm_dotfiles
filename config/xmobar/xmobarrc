@@ -25,7 +25,11 @@ Config { borderColor = "black"
           , Run Alsa "default" "Master" ["-t", "<icon=spkr_01.xbm/> <volume>% <status>"]
           , Run Brightness [ "-t", "<icon=half.xbm/> <percent>%"
                            , "--", "-D", "intel_backlight"] 10
-          , Run Kbd []
+          , Run Kbd [ ("se", "<icon=swe.xpm/>")
+                    , ("us", "<icon=us.xpm/>")
+                    , ("pl", "<icon=pl.xpm/>")
+                    , ("ru", "<icon=ru.xpm/>")
+                    ]
           , Run Com "/home/danielheurlin/bin/redshift-ctrl" ["get"] "redshift" 10
           ]
        , sepChar = "^"
@@ -35,12 +39,12 @@ Config { borderColor = "black"
 
           \<action=`/home/danielheurlin/bin/redshift-ctrl scrollup`   button=4>\
           \<action=`/home/danielheurlin/bin/redshift-ctrl scrolldown` button=5>\
-              \<icon=ghost.xbm/> ^redshift^  \
+              \<icon=ghost.xbm/> ^redshift^K  \
           \</action></action>\
 
           \<action=`xkb-switch -n` button=1>\
-              \<icon=kbd.xbm/> ^kbd^  \
-         \</action>\
+              \^kbd^  \
+          \</action>\
 
           \<action=`xbacklight -inc 5` button=4><action=`xbacklight -dec 5` button=5>\
               \^bright^  \
