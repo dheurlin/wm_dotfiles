@@ -28,6 +28,7 @@ import           Data.Char
 import           Data.Semigroup
 import qualified Data.Map                      as M
 import           Data.Functor
+import qualified Codec.Binary.UTF8.String as UTF8
 
 main = xmonad =<< myXmobar
   (                 desktopConfig
@@ -97,7 +98,8 @@ myStatusBar cmd pp modifyOutput conf = do
     { layoutHook = avoidStruts (layoutHook conf)
     , logHook    = do
         logHook conf
-        dynamicLogWithPP pp { ppOutput = modifyOutput >=> hPutStrLn h }
+        dynamicLogWithPP pp
+          { ppOutput = modifyOutput >=> hPutStrLn h . UTF8.decodeString }
     }
 
 myXmobar = myStatusBar ("xmobar " <> opts) myXmobarPP modifyOutput
