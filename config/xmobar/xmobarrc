@@ -25,10 +25,10 @@ Config { borderColor = "black"
           , Run Alsa "default" "Master" ["-t", "<icon=spkr_01.xbm/> <volume>% <status>"]
           , Run Brightness [ "-t", "<icon=half.xbm/> <percent>%"
                            , "--", "-D", "intel_backlight"] 10
-          , Run Kbd [ ("se", "<icon=swe.xpm/>")
-                    , ("us", "<icon=us.xpm/>")
-                    , ("pl", "<icon=pl.xpm/>")
-                    , ("ru", "<icon=ru.xpm/>")
+          , Run Kbd [ ("se", "<icon=swe.xpm/> se")
+                    , ("us", "<icon=us.xpm/> us")
+                    , ("pl", "<icon=pl.xpm/> pl")
+                    , ("ru", "<icon=ru.xpm/> ru")
                     ]
           , Run Com "/home/danielheurlin/bin/redshift-ctrl" ["get"] "redshift" 10
           ]
