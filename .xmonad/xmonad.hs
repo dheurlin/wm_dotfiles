@@ -33,7 +33,7 @@ main = xmonad =<< myXmobar
   (                 desktopConfig
       { terminal           = myTerminal
       , modMask            = mod4Mask
-      , workspaces         = map show [1..10] <> ["(music)"]
+      , workspaces         = map show [1..10] <> ["(messaging)", "(music)"]
       , layoutHook         = myLayout
       , normalBorderColor  = Col.unFocusedBorder
       , focusedBorderColor = Col.focusedBorder
@@ -53,6 +53,7 @@ myStartupItems = sequence_ [ spawnTrayer ]
 spawnTrayer :: X ()
 spawnTrayer = do
   spawnOnce $ "trayer " <> trayeropts
+  -- spawn $ "trayer " <> trayeropts
   -- Put trayer below fullscreen windows
   spawn "xdo above -t \"$(xdo id -n xmobar)\" \"$(xdo id -N trayer -m)\""
  where
@@ -121,8 +122,9 @@ myXmobarPP = xmobarPP
 
 -- | Formatting for special workspaces
 ppWorkspace :: String -> String
-ppWorkspace "(music)" = "<icon=music.xbm/>"
-ppWorkspace s         = s
+ppWorkspace "(music)"     = "<icon=music.xbm/>"
+ppWorkspace "(messaging)" = "<icon=mail.xbm/>"
+ppWorkspace s             = s
 
 
 
@@ -152,6 +154,8 @@ myManageHook :: ManageHook
 myManageHook = mconcat
   [ stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog"
       --> doRectFloat (RationalRect 0.2 0.1 0.6 0.8)
+  , className =? "TelegramDesktop" --> doShift "(messaging)"
+  , className =? "discord"         --> doShift "(messaging)"
   , manageDocks
   ]
 

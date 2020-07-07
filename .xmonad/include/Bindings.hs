@@ -22,6 +22,7 @@ myBindings =
   , ("M1-k" , windows nextWS)
   , ("M-0"  , windows $ SS.view "10")
   , ("M-m"  , windows $ SS.view "(music)")
+  , ("M-s"  , windows $ SS.view "(messaging)")
   -- Keyboard layout ----------------------------------------------------------
   , ("M-M1-<Space>", spawn "xkb-switch -n"        ) -- toggle between layouts
   , ("C-<Esc>"     , spawn "xdotool key Caps_Lock")
@@ -42,7 +43,7 @@ myBindings =
   , ("S-<Print>", spawn "gnome-screenshot -a"      )
   , ("M-M1-l"   , spawn "~/.config/scripts/lock.sh")
   ] <> [
-  -- Application shortcutsl ---------------------------------------------------
+  -- Application shortcuts  ---------------------------------------------------
     ("M-C-" <> key, spawn program) |
       (key, program) <- [ ("b", "firefox-nightly")
                         , ("n", "nautilus")
