@@ -22,6 +22,7 @@ import           XMonad.Util.SpawnOnce
 import           XMonad.Util.Run
 import           XMonad.Hooks.DynamicProperty
 
+import           Text.Printf
 import           Control.Monad
 import           Data.Maybe
 import           Data.Char
@@ -110,25 +111,45 @@ myXmobar = myStatusBar ("xmobar " <> opts) myXmobarPP modifyOutput
     pure $ replicate (numSpaces + 1) ' ' <> "| " <> s
 
 myXmobarPP = xmobarPP
-  { ppCurrent = xmobarColor "white" Col.accentBg . wrap " " " " . ppWorkspace
+  { ppCurrent = xmobarColor "white" Col.accentBg . wrap " " " " . fmtWorkspace
 
    -- only print non-numeric empty ws
   , ppHiddenNoWindows = \case
       str | all isNumber str -> ""
-          | otherwise        -> ppWorkspace str
+          | otherwise        -> fmtWorkspace str
 
-  , ppVisible = ppVisible xmobarPP . ppWorkspace
-  , ppHidden  = ppHidden  xmobarPP . ppWorkspace
-  , ppUrgent  = ppUrgent  xmobarPP . ppWorkspace
+  , ppVisible = ppVisible xmobarPP . fmtWorkspace
+  , ppHidden  = ppHidden  xmobarPP . fmtWorkspace
+  , ppUrgent  = ppUrgent  xmobarPP . fmtWorkspace
   }
 
--- | Formatting for special workspaces
+-- | Final markup for workspaces
+fmtWorkspace :: String -> String
+fmtWorkspace s = mkClickable s (ppWorkspace s)
+
+-- | Convert special workspaces to icons
 ppWorkspace :: String -> String
 ppWorkspace "(music)"     = "<icon=music.xbm/>"
 ppWorkspace "(messaging)" = "<icon=mail.xbm/>"
 ppWorkspace s             = s
 
-
+-- | Makes clicking a workspace number shift to that workspace,
+-- and scrolling the workspace area scroll through workspaces
+mkClickable :: String -> String -> String
+mkClickable name ss =
+  printf (concat [ "<action=`xdotool key Super_L+%s` button=1>"
+                 ,   "<action=`xdotool key Alt_L+j` button=4>"
+                 ,      "<action=`xdotool key Alt_L+k` button=5>"
+                 ,        "%s"
+                 ,     "</action>"
+                 ,   "</action>"
+                 , "</action>"
+                 ])
+    (key name) ss
+ where
+  key "(music)"     = "m"
+  key "(messaging)" = "s"
+  key s             = s
 
 -- Layouts --------------------------------------------------------------------
 myLayout = lessBorders AllFloats $ tiled ||| Mirror tiled ||| noBorders Full
