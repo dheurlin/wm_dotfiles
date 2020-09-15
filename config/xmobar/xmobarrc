@@ -50,8 +50,8 @@ Config { borderColor = "black"
               \^bright^  \
           \</action></action>\
 
-          \<action=`amixer set Master 1%+` button=4>\
-          \<action=`amixer set Master 1%-` button=5>\
+          \<action=`amixer set Master 1%+; sleep 0.2` button=4>\
+          \<action=`amixer set Master 1%-; sleep 0.2` button=5>\
           \<action=`amixer set Master toggle` button=1>\
               \^alsa:default:Master^ \
           \</action></action></action>\
