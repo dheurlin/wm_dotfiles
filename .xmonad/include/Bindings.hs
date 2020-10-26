@@ -20,9 +20,14 @@ myBindings =
   , ("M-p"  , dmenuRun)
   , ("M1-j" , windows prevWS)
   , ("M1-k" , windows nextWS)
-  , ("M-0"  , windows $ SS.view "10")
+  , ("M-0"  , windows $ SS.view  "10")
+  , ("M-S-0", windows $ SS.shift "10")
   , ("M-m"  , windows $ SS.view "(music)")
   , ("M-s"  , windows $ SS.view "(messaging)")
+  , ("M-n"  , windows $ \ws -> SS.view  (getNewWS ws) ws)
+  , ("M-S-n", windows $ \ws -> SS.shift (getNewWS ws) ws)
+  , ("M-S-o", windows $ \ws -> let new = getNewWS ws
+                               in SS.view new . SS.shift new $ ws)
   -- Keyboard layout ----------------------------------------------------------
   , ("M-M1-<Space>", spawn "xkb-switch -n"        ) -- toggle between layouts
   , ("C-<Esc>"     , spawn "xdotool key Caps_Lock")

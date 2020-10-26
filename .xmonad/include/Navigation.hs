@@ -20,7 +20,6 @@ nextWS = relWS 1
 relWS :: Int -> WindowSet -> WindowSet
 relWS rel ws = SS.view newIx ws
  where
-  isNonEmpty  = isJust . SS.stack
   isCurrent w = SS.tag w == curWS
   allNumeric =
     sortOn (read :: String -> Int)
@@ -36,4 +35,14 @@ relWS rel ws = SS.view newIx ws
   bounds = min (length allWS - 1) . max 0
   newIx  = allWS !! bounds (ix + rel)
 
+-- | Returns the tag of an empty workspace one exists, otherwise return the
+-- current workspace tag.
+getNewWS :: WindowSet -> WorkspaceId
+getNewWS ws = maybe (SS.currentTag ws) SS.tag $ find isEmpty numeric
+  where numeric = filter (all isNumber . SS.tag) $ SS.workspaces ws
 
+isNonEmpty :: SS.Workspace i l a -> Bool
+isNonEmpty = isJust . SS.stack
+
+isEmpty :: SS.Workspace i l a -> Bool
+isEmpty = isNothing . SS.stack
