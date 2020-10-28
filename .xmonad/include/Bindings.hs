@@ -55,5 +55,10 @@ myBindings =
                         , ("r", "kitty zsh -c -i 'ranger'")
                         , ("c", "gnome-calculator")
                         ]
+  ] <> concat [
+  -- Swapping workspaces ------------------------------------------------------
+    [ ("M-M1-"   <> targ, windows $ swapWs  targ) -- swap, keep focus on target
+    , ("M-M1-C-" <> targ, windows $ swapWs' targ) -- swap, keep focus on current
+    ] | targ <- show <$> [1..10]
   ]
 

@@ -6,6 +6,7 @@ import qualified XMonad.StackSet               as SS
 import           Data.List
 import           Data.Char
 import           Data.Maybe
+import           Control.Arrow                  ( (>>>) )
 
 -- | Focuses the previous special or nonempty numeric workspace
 prevWS :: WindowSet -> WindowSet
@@ -40,6 +41,19 @@ relWS rel ws = SS.view newIx ws
 getNewWS :: WindowSet -> WorkspaceId
 getNewWS ws = maybe (SS.currentTag ws) SS.tag $ find isEmpty numeric
   where numeric = filter (all isNumber . SS.tag) $ SS.workspaces ws
+
+-- | Swaps the current workspace with the workspace having the given tag
+swapWs :: WorkspaceId -> WindowSet -> WindowSet
+swapWs target ws = swapWs' ws
+  where swapWs' = SS.renameTag curr "swap"   >>>
+                  SS.renameTag target curr   >>>
+                  SS.renameTag "swap" target
+
+        curr    = SS.currentTag ws
+
+-- | like swapWs, but keeping focus on the current tag ("sending off" the ws)
+swapWs' :: WorkspaceId -> WindowSet -> WindowSet
+swapWs' target ws = SS.view (SS.currentTag ws) . swapWs target $ ws
 
 isNonEmpty :: SS.Workspace i l a -> Bool
 isNonEmpty = isJust . SS.stack
