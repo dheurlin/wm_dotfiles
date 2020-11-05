@@ -7,6 +7,7 @@ import           Data.List
 import           Data.Char
 import           Data.Maybe
 import           Control.Arrow                  ( (>>>) )
+import           Text.Read                      ( readMaybe )
 
 -- | Focuses the previous special or nonempty numeric workspace
 prevWS :: WindowSet -> WindowSet
@@ -39,8 +40,10 @@ relWS rel ws = SS.view newIx ws
 -- | Returns the tag of an empty workspace one exists, otherwise return the
 -- current workspace tag.
 getNewWS :: WindowSet -> WorkspaceId
-getNewWS ws = maybe (SS.currentTag ws) SS.tag $ find isEmpty numeric
-  where numeric = filter (all isNumber . SS.tag) $ SS.workspaces ws
+getNewWS ws = maybe (SS.currentTag ws) (show . SS.tag) $ find isEmpty numeric
+ where
+  -- numeric = sortOn SS.tag $ filter (all isNumber . SS.tag) $ SS.workspaces ws
+  numeric = sortOn SS.tag $ numericWorkspaces ws
 
 -- | Swaps the current workspace with the workspace having the given tag
 swapWs :: WorkspaceId -> WindowSet -> WindowSet
@@ -60,3 +63,18 @@ isNonEmpty = isJust . SS.stack
 
 isEmpty :: SS.Workspace i l a -> Bool
 isEmpty = isNothing . SS.stack
+
+-- | Gets a list of all numeric workspaces in the WindowSet,
+-- with the numbers parsed into Ints
+numericWorkspaces :: WindowSet -> [SS.Workspace Int (Layout Window) Window]
+numericWorkspaces = catMaybeTags . mapTags readMaybe . SS.workspaces
+
+catMaybeTags :: [SS.Workspace (Maybe i) l a] -> [SS.Workspace i l a]
+catMaybeTags ws =
+  concat [ maybe [] (\x -> [w { SS.tag = x }]) t | w <- ws, let t = SS.tag w ]
+
+-- | Maps a function over the tags of a list of workspaces
+mapTags :: (i -> j) -> [SS.Workspace i l a] -> [SS.Workspace j l a]
+mapTags f [] = []
+mapTags f ((SS.Workspace t l s) : tags) =
+  SS.Workspace (f t) l s : mapTags f tags
