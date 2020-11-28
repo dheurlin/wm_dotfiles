@@ -7,6 +7,7 @@ import           Bindings                       ( myBindings )
 import qualified Colors                        as Col
 
 import           XMonad
+import           XMonad.Layout.Named
 import           XMonad.Config.Desktop
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageHelpers
@@ -153,8 +154,10 @@ mkClickable name ss =
   key s             = s
 
 -- Layouts --------------------------------------------------------------------
-myLayout = gaps $ lessBorders AllFloats $
-              tiled ||| Mirror tiled ||| noBorders Full
+myLayout = lessBorders AllFloats $
+              (named "Tall"         $ gaps tiled)
+          ||| (named "Mirror tall"  $ gaps $ Mirror tiled)
+          ||| (named "Full"         $ noBorders Full)
  where
    -- default tiling algorithm partitions the screen into two panes
   tiled   = smartBorders $ Tall nmaster delta ratio
