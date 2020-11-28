@@ -21,6 +21,7 @@ import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Util.SpawnOnce
 import           XMonad.Util.Run
 import           XMonad.Hooks.DynamicProperty
+import           XMonad.Layout.Spacing
 
 import           Text.Printf
 import           Control.Monad
@@ -152,10 +153,12 @@ mkClickable name ss =
   key s             = s
 
 -- Layouts --------------------------------------------------------------------
-myLayout = lessBorders AllFloats $ tiled ||| Mirror tiled ||| noBorders Full
+myLayout = gaps $ lessBorders AllFloats $
+              tiled ||| Mirror tiled ||| noBorders Full
  where
    -- default tiling algorithm partitions the screen into two panes
   tiled   = smartBorders $ Tall nmaster delta ratio
+  -- tiled   = smartBorders $ gaps $ Tall nmaster delta ratio
 
   -- The default number of windows in the master pane
   nmaster = 1
@@ -165,6 +168,9 @@ myLayout = lessBorders AllFloats $ tiled ||| Mirror tiled ||| noBorders Full
 
   -- Percent of screen to increment by when resizing panes
   delta   = 3 / 100
+
+  gaps = spacingRaw True (Border 5 5 5 5) True (Border 5 5 5 5) True
+
 
 -- | Removes borders from fullscreen floating windows
 data AllFloats = AllFloats deriving (Read, Show)

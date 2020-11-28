@@ -6,6 +6,7 @@ import           Dmenu
 import           XMonad
 import qualified XMonad.StackSet               as SS
 import           XMonad.Hooks.ManageDocks
+import           XMonad.Layout.Spacing
 
 import           System.Exit
 
@@ -28,6 +29,9 @@ myBindings =
   , ("M-S-n", windows $ \ws -> SS.shift (getNewWS ws) ws)
   , ("M-S-o", windows $ \ws -> let new = getNewWS ws
                                in SS.view new . SS.shift new $ ws)
+  -- Toggle gaps
+  , ("M-g"  , toggleScreenSpacingEnabled >> toggleWindowSpacingEnabled )
+
   -- Keyboard layout ----------------------------------------------------------
   , ("M-M1-<Space>", spawn "xkb-switch -n"        ) -- toggle between layouts
   , ("C-<Esc>"     , spawn "xdotool key Caps_Lock")

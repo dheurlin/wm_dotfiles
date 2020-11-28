@@ -41,9 +41,7 @@ relWS rel ws = SS.view newIx ws
 -- current workspace tag.
 getNewWS :: WindowSet -> WorkspaceId
 getNewWS ws = maybe (SS.currentTag ws) (show . SS.tag) $ find isEmpty numeric
- where
-  -- numeric = sortOn SS.tag $ filter (all isNumber . SS.tag) $ SS.workspaces ws
-  numeric = sortOn SS.tag $ numericWorkspaces ws
+ where numeric = sortOn SS.tag $ numericWorkspaces ws
 
 -- | Swaps the current workspace with the workspace having the given tag
 swapWs :: WorkspaceId -> WindowSet -> WindowSet
