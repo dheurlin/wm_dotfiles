@@ -33,11 +33,12 @@ Config { borderColor = "black"
                     , ("ru", "<icon=ru.xpm/> ru")
                     ]
           , Run Com "/home/danielheurlin/bin/redshift-ctrl" ["get"] "redshift" 10
+          , Run Com "/home/danielheurlin/.config/scripts/padding-icon.sh" ["panel"] "trayerpad" 10
           ]
        , sepChar = "^"
        , alignSep = "}{"
        , template =
-          "  ^UnsafeStdinReader^ }{\
+          "^trayerpad^ | ^UnsafeStdinReader^ }{\
 
           \<action=`/home/danielheurlin/bin/redshift-ctrl scrollup`   button=4>\
           \<action=`/home/danielheurlin/bin/redshift-ctrl scrolldown` button=5>\

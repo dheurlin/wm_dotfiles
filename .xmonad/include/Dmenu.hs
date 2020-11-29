@@ -39,11 +39,11 @@ dmenuRun =
     [ if head s == '#' then "'" <> s <> "'" else s | s <- dmenuOpts ]
 
 dmenuOpts :: [String]
-dmenuOpts =
-  [ "-sb", Col.accentBg -- selected background color
-  , "-fn", font
-  , "-h", "24"
-  ]
+dmenuOpts = []
+  -- [ "-sb", Col.accentBg -- selected background color
+  -- , "-fn", font
+  -- , "-h", "24"
+  -- ]
 
 confirm :: MonadIO m => String -> m () -> m ()
 confirm query m = dmenu query ["yes", "cancel"] >>= \case

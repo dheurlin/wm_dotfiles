@@ -62,14 +62,14 @@ spawnTrayer = do
   spawnOnce $ "trayer " <> trayeropts
   -- spawn $ "trayer " <> trayeropts
   -- Put trayer below fullscreen windows
-  spawn "xdo above -t \"$(xdo id -n xmobar)\" \"$(xdo id -N trayer -m)\""
+  -- spawn "xdo above -t \"$(xdo id -n xmobar)\" \"$(xdo id -N trayer -m)\""
  where
    trayeropts = unwords [ "--widthtype"    , "request"
-                        , "--height"       , "14"
                         , "--edge"         , "top"
+                        , "--height"       , "20"
                         , "--align"        , "left"
-                        , "--distancefrom" , "left"
-                        , "--distance"     , "5"
+                        , "--distancefrom" , "top"
+                        , "--distance"     , "2"
                         , "--transparent"  , "true"
                         , "--alpha"        , "0"
                         , "--tint"         , show $ "0x" <> tail Col.bg
@@ -110,10 +110,11 @@ myStatusBar cmd pp modifyOutput conf = do
 
 myXmobar = myStatusBar ("xmobar " <> opts) myXmobarPP modifyOutput
  where
-  opts = unwords ["-F", "gray", "-B", show Col.bg, "-f", show $ "xft:" <> font]
-  modifyOutput s = do
-    numSpaces <- trayWidthChars
-    pure $ replicate (numSpaces + 1) ' ' <> "| " <> s
+  opts = []
+  modifyOutput = pure
+  -- modifyOutput s = do
+  --   numSpaces <- trayWidthChars
+  --   pure $ replicate (numSpaces + 1) ' ' <> "| " <> s
 
 myXmobarPP = xmobarPP
   { ppCurrent = xmobarColor "white" Col.accentBg . wrap " " " " . fmtWorkspace
