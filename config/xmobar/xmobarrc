@@ -62,5 +62,9 @@ Config { borderColor = "black"
 
           \^battery^  \
 
-          \^date^  "
+          \^date^  \
+
+          \<action=`/home/danielheurlin/.config/scripts/shutdown.sh` button=1>\
+              \<fc=#FF0000><icon=power.xbm/></fc>  \
+          \</action>"
        }
