@@ -49,9 +49,11 @@ myBindings =
   , ("<XF86AudioNext>"           , spawn "playerctl next"                 )
   , ("<XF86AudioPrev>"           , spawn "playerctl previous"             )
   -- Misc ---------------------------------------------------------------------
-  , ("<Print>"  , spawn "gnome-screenshot"         )
-  , ("S-<Print>", spawn "gnome-screenshot -a"      )
-  , ("M-M1-l"   , spawn "~/.config/scripts/lock.sh")
+  , ("<Print>"     , spawn "gnome-screenshot"         )
+  , ("S-<Print>"   , spawn "gnome-screenshot -a"      )
+  , ("M-M1-l"      , spawn "~/.config/scripts/lock.sh")
+  , ("M-C-<Space>" ,
+      spawn "/home/danielheurlin/scripts/dmenu-unicode/dmenu-unicode.sh")
   ] <> [
   -- Application shortcuts  ---------------------------------------------------
     ("M-C-" <> key, spawn program) |
