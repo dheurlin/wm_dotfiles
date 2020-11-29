@@ -55,40 +55,19 @@ main = xmonad =<< myXmobar
 
 -- Startup items --------------------------------------------------------------
 myStartupItems :: X ()
-myStartupItems = sequence_ [ spawnTrayer ]
+myStartupItems = sequence_ [ spawnTray ]
 
-spawnTrayer :: X ()
-spawnTrayer = do
-  spawnOnce $ "trayer " <> trayeropts
-  -- spawn $ "trayer " <> trayeropts
-  -- Put trayer below fullscreen windows
-  -- spawn "xdo above -t \"$(xdo id -n xmobar)\" \"$(xdo id -N trayer -m)\""
- where
-   trayeropts = unwords [ "--widthtype"    , "request"
-                        , "--edge"         , "top"
-                        , "--height"       , "20"
-                        , "--align"        , "left"
-                        , "--distancefrom" , "top"
-                        , "--distance"     , "2"
-                        , "--transparent"  , "true"
-                        , "--alpha"        , "0"
-                        , "--tint"         , show $ "0x" <> tail Col.bg
-                        , "--iconspacing"  , "5"
-                        ]
-
--- | Gets the current with of the system tray in pixels
-getTrayWidth :: IO Int
-getTrayWidth =
-  readProcess "xdo" ["id", "-N", "trayer"]
-    <&> (["getwindowgeometry"] <>) . (: [])
-    >>= readProcess "xdotool"
-    <&> lines
-    <&> filter ((== "  Geometry") . take 10)
-    <&> read . takeWhile isNumber . dropWhile (not . isNumber) . head
-
--- | Gets the current with of the system tray in characters of the bar font
-trayWidthChars :: IO Int
-trayWidthChars = getTrayWidth <&> (// (fontWidth - 3))
+spawnTray :: X ()
+spawnTray = do
+  spawn $ "stalonetray " <> trayopts
+  -- spawn $ "stalonetray " <> trayopts
+  spawn "sleep 2 && xdo above -t \"$(xdo id -n xmobar)\" \"$(xdo id -N stalonetray -m)\""
+  where
+    trayopts = unwords [ "-bg"        , show Col.bg
+                       , "--icon-size", "16"
+                       , "--geometry" , "1x1+10+0"
+                       , "--slot-size", "24"
+                       ]
 
 -- XMobar setup ---------------------------------------------------------------
 myStatusBar
