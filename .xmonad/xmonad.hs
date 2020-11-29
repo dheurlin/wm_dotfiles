@@ -41,6 +41,7 @@ main = xmonad =<< myXmobar
       , modMask            = mod4Mask
       , workspaces         = map show [1..10] <> ["(messaging)", "(music)"]
       , layoutHook         = myLayout
+      , borderWidth        = 2
       , normalBorderColor  = Col.unFocusedBorder
       , focusedBorderColor = Col.focusedBorder
       , handleEventHook    = handleEventHook desktopConfig <> myHandleEventHook
@@ -188,13 +189,23 @@ instance SetsAmbiguous AllFloats where
 myManageHook :: ManageHook
 myManageHook = mconcat
   [ stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog"
-      --> doRectFloat (RationalRect 0.2 0.1 0.6 0.8)
+      --> doRectFloat smallRect
+  , stringProperty "WM_WINDOW_ROLE" =? "gimp-layer-new"
+      --> doRectFloat smallRect
+  , stringProperty "WM_WINDOW_ROLE" =? "gimp-toolbox-color-dialog"
+      --> doRectFloat tinyRect
+      --
   , className =? "TelegramDesktop" --> doShift "(messaging)"
   , className =? "discord"         --> doShift "(messaging)"
   , manageDocks
   ]
+  where
+    smallRect = RationalRect 0.2 0.1 0.6 0.8
+    tinyRect  = RationalRect 0.3 0.2 0.4 0.6
 
--- doRectFloat
+
+-- WM_WINDOW_ROLE(STRING) : gimp-toolbox-color-dialog
+-- WM_WINDOW_ROLE(STRING) = "gimp-layer-new"
 
 myHandleEventHook :: Event -> X All
 myHandleEventHook = mconcat
