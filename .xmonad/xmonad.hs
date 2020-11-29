@@ -6,7 +6,8 @@ import           Vars
 import           Bindings                       ( myBindings )
 import qualified Colors                        as Col
 
-import           XMonad
+import           XMonad                  hiding ( (|||) )
+import           XMonad.Layout.LayoutCombinators
 import           XMonad.Layout.Named
 import           XMonad.Config.Desktop
 import           XMonad.Hooks.DynamicLog
@@ -16,6 +17,7 @@ import           XMonad.StackSet                ( RationalRect(..)
                                                 )
 import           XMonad.Util.EZConfig
 import           XMonad.Layout.NoBorders
+import           XMonad.Layout.Grid
 import           XMonad.Layout.LayoutModifier
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.EwmhDesktops
@@ -157,6 +159,7 @@ mkClickable name ss =
 myLayout = lessBorders AllFloats $
               (named "Tall"         $ gaps tiled)
           ||| (named "Mirror tall"  $ gaps $ Mirror tiled)
+          ||| (named "Grid"         $ gaps Grid)
           ||| (named "Full"         $ noBorders Full)
  where
    -- default tiling algorithm partitions the screen into two panes
