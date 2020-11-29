@@ -42,6 +42,7 @@ dmenuOpts :: [String]
 dmenuOpts =
   [ "-sb", Col.accentBg -- selected background color
   , "-fn", font
+  , "-h", "24"
   ]
 
 confirm :: MonadIO m => String -> m () -> m ()

@@ -1,8 +1,10 @@
 Config { borderColor = "black"
-       , bgColor = "black"
+       , bgColor = "#1f1f1f"
        , fgColor = "grey"
        , alpha = 255
-         position = Top
+       , font = "xft:SourceCodePro:size=7"
+       -- , position = Top
+       , position = Static { xpos = 0 , ypos = 0, width = 1920, height = 24 }
        , textOffset = -1
        , iconOffset = -1
        , lowerOnStart = True
