@@ -34,11 +34,14 @@ Config { borderColor = "black"
                     ]
           , Run Com "/home/danielheurlin/bin/redshift-ctrl" ["get"] "redshift" 10
           , Run Com "/home/danielheurlin/.config/scripts/padding-icon.sh" ["stalonetray"] "trayerpad" 10
+          , Run Com "/home/danielheurlin/.config/scripts/getPlayerInfo.sh" ["25"] "playerinfo" 10
           ]
        , sepChar = "^"
        , alignSep = "}{"
        , template =
           "  ^trayerpad^ | ^UnsafeStdinReader^ }{\
+
+          \<icon=music.xbm/> ^playerinfo^  \
 
           \<action=`/home/danielheurlin/bin/redshift-ctrl scrollup`   button=4>\
           \<action=`/home/danielheurlin/bin/redshift-ctrl scrolldown` button=5>\
