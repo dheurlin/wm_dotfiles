@@ -1,7 +1,6 @@
 {-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE FlexibleContexts  #-}
 
-import           Util
 import           Vars
 import           Bindings                       ( myBindings )
 import qualified Colors                        as Col
@@ -23,6 +22,7 @@ import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.EwmhDesktops
 import           XMonad.Util.SpawnOnce
 import           XMonad.Util.Run
+import           XMonad.Util.Scratchpad ( scratchpadManageHookDefault )
 import           XMonad.Hooks.DynamicProperty
 import           XMonad.Layout.Spacing
 
@@ -31,8 +31,8 @@ import           Control.Monad
 import           Data.Maybe
 import           Data.Char
 import           Data.Semigroup
+import           Data.Functor                   ( ($>) )
 import qualified Data.Map                      as M
-import           Data.Functor
 import qualified Codec.Binary.UTF8.String as UTF8
 
 main = xmonad =<< myXmobar
@@ -60,7 +60,7 @@ myStartupItems = sequence_ [ spawnTray ]
 spawnTray :: X ()
 spawnTray = do
   spawn $ "stalonetray " <> trayopts
-  -- spawn $ "stalonetray " <> trayopts
+  -- spawnOnce $ "stalonetray " <> trayopts
   spawn "sleep 2 && xdo above -t \"$(xdo id -n xmobar)\" \"$(xdo id -N stalonetray -m)\""
   where
     trayopts = unwords [ "-bg"        , show Col.bg
@@ -91,9 +91,6 @@ myXmobar = myStatusBar ("xmobar " <> opts) myXmobarPP modifyOutput
  where
   opts = []
   modifyOutput = pure
-  -- modifyOutput s = do
-  --   numSpaces <- trayWidthChars
-  --   pure $ replicate (numSpaces + 1) ' ' <> "| " <> s
 
 myXmobarPP = xmobarPP
   { ppCurrent = xmobarColor "white" Col.accentBg . wrap " " " " . fmtWorkspace
@@ -101,10 +98,14 @@ myXmobarPP = xmobarPP
    -- only print non-numeric empty ws
   , ppHiddenNoWindows = \case
       str | all isNumber str -> ""
+          | str == "NSP"     -> "" -- hide NSP
           | otherwise        -> fmtWorkspace str
 
+  , ppHidden  = \case
+      "NSP" -> "" -- hide NSP
+      s     -> ppHidden xmobarPP . fmtWorkspace $ s
+
   , ppVisible = ppVisible xmobarPP . fmtWorkspace
-  , ppHidden  = ppHidden  xmobarPP . fmtWorkspace
   , ppUrgent  = ppUrgent  xmobarPP . fmtWorkspace
   }
 
@@ -156,7 +157,8 @@ myLayout = lessBorders AllFloats $
   -- Percent of screen to increment by when resizing panes
   delta   = 3 / 100
 
-  gaps = spacingRaw True (Border 5 5 5 5) True (Border 5 5 5 5) True
+  gaps = spacingRaw False (Border 5 5 5 5) True (Border 5 5 5 5) True
+  -- gaps = id
 
 
 -- | Removes borders from fullscreen floating windows
@@ -168,21 +170,28 @@ instance SetsAmbiguous AllFloats where
 -- Hooks ----------------------------------------------------------------------
 myManageHook :: ManageHook
 myManageHook = mconcat
-  [ stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog"
+  [
+  -- Make popups appear as small floating windows
+   stringProperty "WM_WINDOW_ROLE" =? "GtkFileChooserDialog"
       --> doRectFloat smallRect
   , stringProperty "WM_WINDOW_ROLE" =? "gimp-layer-new"
       --> doRectFloat smallRect
   , stringProperty "WM_WINDOW_ROLE" =? "gimp-toolbox-color-dialog"
       --> doRectFloat tinyRect
-      --
+
+  --- No gaps for browser windows TODO not working!
+  , className =? "Nightly" --> liftX (setSmartSpacing False) $> Endo id
+
+  -- Move stuff to dedicated workspaces
   , className =? "TelegramDesktop" --> doShift "(messaging)"
   , className =? "discord"         --> doShift "(messaging)"
+  --
   , manageDocks
+  , scratchpadManageHookDefault
   ]
   where
     smallRect = RationalRect 0.2 0.1 0.6 0.8
     tinyRect  = RationalRect 0.3 0.2 0.4 0.6
-
 
 -- WM_WINDOW_ROLE(STRING) : gimp-toolbox-color-dialog
 -- WM_WINDOW_ROLE(STRING) = "gimp-layer-new"

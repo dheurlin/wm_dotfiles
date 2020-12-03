@@ -30,7 +30,8 @@ relWS rel ws = SS.view newIx ws
       . filter (\ws -> isCurrent ws || isNonEmpty ws)
       $ SS.workspaces ws
   allSpecial =
-    sort $ filter (not . any isNumber) . map SS.tag $ SS.workspaces ws
+    sort $ filter (\name -> not (any isNumber name) && name /= "NSP")
+      . map SS.tag $ SS.workspaces ws
   allWS  = allNumeric <> allSpecial
   curWS  = SS.currentTag ws
   ix     = fromJust $ curWS `elemIndex` allWS

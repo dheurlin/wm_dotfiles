@@ -11,7 +11,7 @@ trim = f . f where f = reverse . dropWhile isSpace
 
 printDebug :: (Show a, MonadIO m) => a -> m ()
 printDebug val =
-  liftIO $ withFile "/home/sagge/.xmonad/debug" WriteMode $ \file ->
+  liftIO $ withFile "/home/danielheurlin/.xmonad/debug" WriteMode $ \file ->
     hPrint file val
 
 readProcess :: FilePath -> [String] -> IO String
