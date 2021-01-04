@@ -64,7 +64,7 @@ myBindings =
   -- Application shortcuts  ---------------------------------------------------
     ("M-C-" <> key, spawn program) |
       (key, program) <- [ ("b", "firefox-nightly")
-                        , ("n", "nautilus")
+                        , ("n", "pcmanfm")
                         , ("r", "kitty zsh -c -i 'ranger'")
                         , ("c", "gnome-calculator")
                         ]
