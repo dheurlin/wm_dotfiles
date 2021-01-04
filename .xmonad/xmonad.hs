@@ -2,6 +2,7 @@
 {-# LANGUAGE FlexibleContexts  #-}
 
 import           Vars
+import           Util                           ( doAbsRectFloat )
 import           Bindings                       ( myBindings )
 import qualified Colors                        as Col
 
@@ -13,6 +14,7 @@ import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageHelpers
 import           XMonad.StackSet                ( RationalRect(..)
                                                 , floating
+                                                , screenDetail
                                                 )
 import           XMonad.Util.EZConfig
 import           XMonad.Layout.NoBorders
@@ -30,6 +32,7 @@ import           Text.Printf
 import           Control.Monad
 import           Data.Maybe
 import           Data.Char
+import           Data.List
 import           Data.Semigroup
 import           Data.Functor                   ( ($>) )
 import qualified Data.Map                      as M
@@ -54,13 +57,14 @@ main = xmonad =<< myXmobar
   )
 
 -- Startup items --------------------------------------------------------------
+
 myStartupItems :: X ()
 myStartupItems = sequence_ [ spawnTray ]
 
 spawnTray :: X ()
 spawnTray = do
-  spawn $ "stalonetray " <> trayopts
-  -- spawnOnce $ "stalonetray " <> trayopts
+  -- spawn "pgrep -x stalonetray && killall stalonetray && sleep 1"
+  -- spawn $ "stalonetray " <> trayopts
   spawn "sleep 2 && xdo above -t \"$(xdo id -n xmobar)\" \"$(xdo id -N stalonetray -m)\""
   where
     trayopts = unwords [ "-bg"        , show Col.bg
@@ -168,6 +172,7 @@ instance SetsAmbiguous AllFloats where
     hiddens _ wset _ _ _ = M.keys $ floating wset
 
 -- Hooks ----------------------------------------------------------------------
+
 myManageHook :: ManageHook
 myManageHook = mconcat
   [
@@ -178,6 +183,7 @@ myManageHook = mconcat
       --> doRectFloat smallRect
   , stringProperty "WM_WINDOW_ROLE" =? "gimp-toolbox-color-dialog"
       --> doRectFloat tinyRect
+  , className =? "Gnome-calculator" --> doRectFloat tinyRect
 
   --- No gaps for browser windows TODO not working!
   , className =? "Nightly" --> liftX (setSmartSpacing False) $> Endo id
@@ -185,13 +191,20 @@ myManageHook = mconcat
   -- Move stuff to dedicated workspaces
   , className =? "TelegramDesktop" --> doShift "(messaging)"
   , className =? "discord"         --> doShift "(messaging)"
-  --
+
+  -- Make NO$GBA debugger behave
+  , ("No$gba Emulator" `isPrefixOf`) <$> stringProperty "WM_NAME"
+      --> doAbsRectFloat gbaW gbaH
+
+  -- Misc
   , manageDocks
   , scratchpadManageHookDefault
   ]
   where
     smallRect = RationalRect 0.2 0.1 0.6 0.8
     tinyRect  = RationalRect 0.3 0.2 0.4 0.6
+    -- Scaled up GBA screen size. + 4 to account for border
+    (gbaW, gbaH) = (240 * 3 + 4, 160 * 3 + 4)
 
 -- WM_WINDOW_ROLE(STRING) : gimp-toolbox-color-dialog
 -- WM_WINDOW_ROLE(STRING) = "gimp-layer-new"
@@ -200,6 +213,7 @@ myHandleEventHook :: Event -> X All
 myHandleEventHook = mconcat
   [ fullscreenEventHook
   , dynamicPropertyChange "WM_NAME" (title =? "Spotify" --> doShift "(music)")
+  -- , dynamicPropertyChange "WM_NAME" (("No$gba Emulator" `isPrefixOf`) <$> appName --> doFloat)
   ]
 
 
