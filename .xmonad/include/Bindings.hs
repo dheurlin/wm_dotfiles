@@ -21,7 +21,7 @@ myBindings =
   , ("M-q"  , confirm "Restart XMonad?"   $ spawn "xmonad --restart")
   , ("M-S-r", confirm "Recompile and restart XMonad?"
                 $ spawn "xmonad --recompile && xmonad --restart"    )
-  , ("M-p"  , dmenuRun)
+  , ("M-p"  , spawn "rofi -show combi")
   , ("M1-j" , windows prevWS)
   , ("M1-k" , windows nextWS)
   , ("M-0"  , windows $ SS.view  "10")
@@ -58,6 +58,7 @@ myBindings =
   , ("<Print>"     , spawn "gnome-screenshot"         )
   , ("S-<Print>"   , spawn "gnome-screenshot -a"      )
   , ("M-M1-l"      , spawn "~/.config/scripts/lock.sh")
+  , ("M1-<Tab>"    , spawn "rofi -show window")
   , ("M-C-<Space>" ,
       spawn "/home/danielheurlin/scripts/dmenu-unicode/dmenu-unicode.sh")
   ] <> [
