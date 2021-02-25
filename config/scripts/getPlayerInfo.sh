@@ -10,7 +10,7 @@ trim() {
   fi
 }
 
-status=$(playerctl status)
+status=$(playerctl status 2> /dev/null)
 case $status in
   "Playing")
     artist=$(playerctl metadata --format "{{artist}}")

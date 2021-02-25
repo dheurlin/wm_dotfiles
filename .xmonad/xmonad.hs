@@ -12,6 +12,7 @@ import           XMonad.Layout.Named
 import           XMonad.Config.Desktop
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageHelpers
+import qualified XMonad.StackSet               as SS
 import           XMonad.StackSet                ( RationalRect(..)
                                                 , floating
                                                 , screenDetail
@@ -38,108 +39,42 @@ import           Data.Functor                   ( ($>) )
 import qualified Data.Map                      as M
 import qualified Codec.Binary.UTF8.String as UTF8
 
-main = xmonad =<< myXmobar
-  (                 desktopConfig
-      { terminal           = myTerminal
-      , modMask            = mod4Mask
-      , workspaces         = map show [1..10] <> ["(messaging)", "(music)"]
-      , layoutHook         = myLayout
-      , borderWidth        = 2
-      , normalBorderColor  = Col.unFocusedBorder
-      , focusedBorderColor = Col.focusedBorder
-      , handleEventHook    = handleEventHook desktopConfig <> myHandleEventHook
-      , manageHook         = myManageHook
-      , startupHook        = startupHook desktopConfig
-                             >> addEWMHFullscreen
-                             >> myStartupItems
-      }
-  `additionalKeysP` myBindings
-  )
+main = do
+  safeSpawn "mkfifo" ["/tmp/.xmonad-layout-log"]
+  xmonad $ ewmh
+    ( desktopConfig
+        { terminal           = myTerminal
+        , modMask            = mod4Mask
+        , workspaces         = map show [1..10] <> ["(messaging)", "(music)"]
+        , layoutHook         = avoidStruts myLayout
+        , borderWidth        = 2
+        , normalBorderColor  = Col.unFocusedBorder
+        , focusedBorderColor = Col.focusedBorder
+        , handleEventHook    = docksEventHook <> handleEventHook desktopConfig <> myHandleEventHook
+        , manageHook         = myManageHook
+        , logHook            = eventLogHookForPolybar
+        , startupHook        = startupHook desktopConfig
+                               >> addEWMHFullscreen
+                               >> myStartupItems
+        }
+      `additionalKeysP` myBindings
+    )
 
 -- Startup items --------------------------------------------------------------
 
 myStartupItems :: X ()
-myStartupItems = sequence_ [ spawnTray ]
+myStartupItems = sequence_ [  ]
 
-spawnTray :: X ()
-spawnTray = do
-  -- spawn "pgrep -x stalonetray && killall stalonetray && sleep 1"
-  -- spawn $ "stalonetray " <> trayopts
-  spawn "sleep 2 && xdo above -t \"$(xdo id -n xmobar)\" \"$(xdo id -N stalonetray -m)\""
-  where
-    trayopts = unwords [ "-bg"        , show Col.bg
-                       , "--icon-size", "16"
-                       , "--geometry" , "1x1+10+0"
-                       , "--slot-size", "24"
-                       ]
 
--- XMobar setup ---------------------------------------------------------------
-myStatusBar
-  :: LayoutClass l Window
-  => String
-  -> PP
-  -> (String -> IO String)
-  -> XConfig l
-  -> IO (XConfig (ModifiedLayout AvoidStruts l))
-myStatusBar cmd pp modifyOutput conf = do
-  h <- spawnPipe cmd
-  return $ docks $ conf
-    { layoutHook = avoidStruts (layoutHook conf)
-    , logHook    = do
-        logHook conf
-        dynamicLogWithPP pp
-          { ppOutput = modifyOutput >=> hPutStrLn h . UTF8.decodeString }
-    }
+-- Bar setup     ---------------------------------------------------------------
 
-myXmobar = myStatusBar ("xmobar " <> opts) myXmobarPP modifyOutput
- where
-  opts = []
-  modifyOutput = pure
+-- this creates a FIFO containing the current layout which polybar can read from
+eventLogHookForPolybar :: X ()
+eventLogHookForPolybar = do
+  winset <- gets windowset
+  let ld = description . SS.layout . SS.workspace . SS.current $ winset
+  io $ appendFile "/tmp/.xmonad-layout-log" (ld ++ "\n")
 
-myXmobarPP = xmobarPP
-  { ppCurrent = xmobarColor "white" Col.accentBg . wrap " " " " . fmtWorkspace
-
-   -- only print non-numeric empty ws
-  , ppHiddenNoWindows = \case
-      str | all isNumber str -> ""
-          | str == "NSP"     -> "" -- hide NSP
-          | otherwise        -> fmtWorkspace str
-
-  , ppHidden  = \case
-      "NSP" -> "" -- hide NSP
-      s     -> ppHidden xmobarPP . fmtWorkspace $ s
-
-  , ppVisible = ppVisible xmobarPP . fmtWorkspace
-  , ppUrgent  = ppUrgent  xmobarPP . fmtWorkspace
-  }
-
--- | Final markup for workspaces
-fmtWorkspace :: String -> String
-fmtWorkspace s = mkClickable s (ppWorkspace s)
-
--- | Convert special workspaces to icons
-ppWorkspace :: String -> String
-ppWorkspace "(music)"     = "<icon=music.xbm/>"
-ppWorkspace "(messaging)" = "<icon=mail.xbm/>"
-ppWorkspace s             = s
-
--- | Makes clicking a workspace number shift to that workspace,
--- and scrolling the workspace area scroll through workspaces
-mkClickable :: String -> String -> String
-mkClickable name ss =
-  printf (concat [ "<action=`xdotool key Super_L+%s` button=1>"
-                 ,   "<action=`xdotool key Alt_L+j` button=4>"
-                 ,      "<action=`xdotool key Alt_L+k` button=5>"
-                 ,        "%s"
-                 ,     "</action>"
-                 ,   "</action>"
-                 , "</action>"
-                 ])
-    (key name) ss
- where
-  key "(music)"     = "m"
-  key "(messaging)" = "s"
-  key s             = s
 
 -- Layouts --------------------------------------------------------------------
 myLayout = lessBorders AllFloats $
@@ -206,14 +141,11 @@ myManageHook = mconcat
     -- Scaled up GBA screen size. + 4 to account for border
     (gbaW, gbaH) = (240 * 3 + 4, 160 * 3 + 4)
 
--- WM_WINDOW_ROLE(STRING) : gimp-toolbox-color-dialog
--- WM_WINDOW_ROLE(STRING) = "gimp-layer-new"
 
 myHandleEventHook :: Event -> X All
 myHandleEventHook = mconcat
   [ fullscreenEventHook
   , dynamicPropertyChange "WM_NAME" (title =? "Spotify" --> doShift "(music)")
-  -- , dynamicPropertyChange "WM_NAME" (("No$gba Emulator" `isPrefixOf`) <$> appName --> doFloat)
   ]
 
 
