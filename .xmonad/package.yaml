@@ -22,10 +22,10 @@ dependencies:
 - base >= 4.7 && < 5
 - xmonad-contrib
 - xmonad
-- xmobar
 - random
 - containers
 - utf8-string
+- transformers
 
 library:
   source-dirs: include

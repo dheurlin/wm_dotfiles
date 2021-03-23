@@ -1,4 +1,3 @@
-{-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE FlexibleContexts  #-}
 
 import           Vars
@@ -10,7 +9,6 @@ import           XMonad                  hiding ( (|||) )
 import           XMonad.Layout.LayoutCombinators
 import           XMonad.Layout.Named
 import           XMonad.Config.Desktop
-import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.ManageHelpers
 import qualified XMonad.StackSet               as SS
 import           XMonad.StackSet                ( RationalRect(..)
@@ -20,24 +18,19 @@ import           XMonad.StackSet                ( RationalRect(..)
 import           XMonad.Util.EZConfig
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Grid
-import           XMonad.Layout.LayoutModifier
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.EwmhDesktops
-import           XMonad.Util.SpawnOnce
 import           XMonad.Util.Run
 import           XMonad.Util.Scratchpad ( scratchpadManageHookDefault )
 import           XMonad.Hooks.DynamicProperty
 import           XMonad.Layout.Spacing
 
-import           Text.Printf
 import           Control.Monad
 import           Data.Maybe
-import           Data.Char
 import           Data.List
 import           Data.Semigroup
 import           Data.Functor                   ( ($>) )
 import qualified Data.Map                      as M
-import qualified Codec.Binary.UTF8.String as UTF8
 
 main = do
   safeSpawn "mkfifo" ["/tmp/.xmonad-layout-log"]
@@ -78,10 +71,10 @@ eventLogHookForPolybar = do
 
 -- Layouts --------------------------------------------------------------------
 myLayout = lessBorders AllFloats $
-              (named "Tall"         $ gaps tiled)
-          ||| (named "Mirror tall"  $ gaps $ Mirror tiled)
-          ||| (named "Grid"         $ gaps Grid)
-          ||| (named "Full"         $ noBorders Full)
+              named "Tall"         (gaps tiled)
+          ||| named "Mirror tall"  (gaps $ Mirror tiled)
+          ||| named "Grid"         (gaps Grid)
+          ||| named "Full"         (noBorders Full)
  where
    -- default tiling algorithm partitions the screen into two panes
   tiled   = smartBorders $ Tall nmaster delta ratio
@@ -126,6 +119,9 @@ myManageHook = mconcat
   -- Move stuff to dedicated workspaces
   , className =? "TelegramDesktop" --> doShift "(messaging)"
   , className =? "discord"         --> doShift "(messaging)"
+
+  -- Praat popups
+  , stringProperty "WM_NAME" =? "Praat Info" --> doRectFloat tinyRect
 
   -- Make NO$GBA debugger behave
   , ("No$gba Emulator" `isPrefixOf`) <$> stringProperty "WM_NAME"

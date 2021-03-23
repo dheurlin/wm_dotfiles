@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a6752dfa86e1d4fd08a54677c32e3fa6309d93fce746db19e3da556069361fbf
+-- hash: a8bbabfe66e9b2cf3632e382c8c0a703a5aac9890cc0a26a8b3747fdd73c89e2
 
 name:           my-xmonad
 version:        0.1.0.0
@@ -39,7 +39,8 @@ library
       base >=4.7 && <5
     , containers
     , random
-    , xmobar
+    , transformers
+    , utf8-string
     , xmonad
     , xmonad-contrib
   default-language: Haskell2010
@@ -56,7 +57,8 @@ executable my-xmonad-exe
     , containers
     , my-xmonad
     , random
-    , xmobar
+    , transformers
+    , utf8-string
     , xmonad
     , xmonad-contrib
   default-language: Haskell2010
