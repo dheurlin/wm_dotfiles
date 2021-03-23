@@ -22,6 +22,7 @@ myBindings =
   , ("M-S-r", confirm "Recompile and restart XMonad?"
                 $ spawn "xmonad --recompile && xmonad --restart"    )
   , ("M-p"  , spawn "rofi -show combi")
+  , ("M-S-p", spawn "~/.config/rofi/cmd.sh")
   , ("M1-j" , windows prevWS)
   , ("M1-k" , windows nextWS)
   , ("M-0"  , windows $ SS.view  "10")
