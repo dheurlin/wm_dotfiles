@@ -1,0 +1,6 @@
+Polish Cheat Sheet,$HOME/.config/rofi/scripts/pol.sh
+Go to coding directory,$HOME/.config/rofi/scripts/code.sh
+Go to linguistics directory,$HOME/.config/rofi/scripts/ling.sh
+Keyboard setup script,$HOME/.config/scripts/kbd-setup.sh
+Send clipboard as keystrokes,$HOME/scripts/clip-strokes.sh
+XMonad config,$HOME/.config/rofi/scripts/xmonad-conf.sh
