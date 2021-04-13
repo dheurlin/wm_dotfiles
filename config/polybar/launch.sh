@@ -10,9 +10,9 @@ while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
 # Launch the main bar on every monitor
 monitors=$(xrandr --query | grep " connected")
 while read -r m; do
-  polybar main --reload &
+  polybar main --reload > polybar.log 2>&1 &
   echo "Bar launched on $monitor"
-  # lower the bar so it's below fullscreen windows (20 times arbitrarily lol)
+  # lower the bar so it's below fullscreen windows (50 times arbitrarily lol)
   for i in `seq 1 50`; do
     xdo lower -n tray
     xdo lower -n polybar
