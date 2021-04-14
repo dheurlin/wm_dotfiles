@@ -20,6 +20,7 @@ import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Grid
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.EwmhDesktops
+import           XMonad.Hooks.WindowSwallowing
 import           XMonad.Util.Run
 import           XMonad.Util.Scratchpad ( scratchpadManageHookDefault )
 import           XMonad.Hooks.DynamicProperty
@@ -138,9 +139,14 @@ myManageHook = mconcat
     (gbaW, gbaH) = (240 * 3 + 4, 160 * 3 + 4)
 
 
+-- Set up window swallowing
+mySwallowHook :: Event -> X All
+mySwallowHook = swallowEventHook (className =? "kitty") (pure True)
+
 myHandleEventHook :: Event -> X All
 myHandleEventHook = mconcat
   [ fullscreenEventHook
+  , mySwallowHook
   , dynamicPropertyChange "WM_NAME" (title =? "Spotify" --> doShift "(music)")
   ]
 
