@@ -141,7 +141,8 @@ myManageHook = mconcat
 
 -- Set up window swallowing
 mySwallowHook :: Event -> X All
-mySwallowHook = swallowEventHook (className =? "kitty") (pure True)
+mySwallowHook = swallowEventHook (className =? "kitty")
+                                 (not <$> className =? "kitty")
 
 myHandleEventHook :: Event -> X All
 myHandleEventHook = mconcat
