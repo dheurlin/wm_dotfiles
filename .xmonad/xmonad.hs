@@ -20,6 +20,7 @@ import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Grid
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.EwmhDesktops
+import           XMonad.Hooks.UrgencyHook
 import           XMonad.Hooks.WindowSwallowing
 import           XMonad.Util.Run
 import           XMonad.Util.Scratchpad ( scratchpadManageHookDefault )
@@ -35,7 +36,7 @@ import qualified Data.Map                      as M
 
 main = do
   safeSpawn "mkfifo" ["/tmp/.xmonad-layout-log"]
-  xmonad $ ewmh
+  xmonad $ setEwmhActivateHook doFocus $ ewmh
     ( desktopConfig
         { terminal           = myTerminal
         , modMask            = mod4Mask
@@ -49,15 +50,15 @@ main = do
         , logHook            = eventLogHookForPolybar
         , startupHook        = startupHook desktopConfig
                                >> addEWMHFullscreen
-                               >> myStartupItems
+                               -- >> myStartupItems
         }
       `additionalKeysP` myBindings
     )
 
 -- Startup items --------------------------------------------------------------
 
-myStartupItems :: X ()
-myStartupItems = sequence_ [  ]
+-- myStartupItems :: X ()
+-- myStartupItems = sequence_ [  ]
 
 
 -- Bar setup     ---------------------------------------------------------------

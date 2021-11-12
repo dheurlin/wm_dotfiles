@@ -6,7 +6,7 @@ it won't break if the global Haskell install does.
 ## Installation
 
 Clone this archive and symlink the `.xmonad` directory to `~/.xmonad`. Then clone
-xmonad-git, xmonad-contrib-git and xmobar-git into the same directory. Next, run
+xmonad-git, xmonad-contrib-git into the same directory. Next, run
 `stack install` to install everything. To update XMonad or XMobar, simply
 run `stack install` again.
 

@@ -17,7 +17,7 @@
 #
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2018-01-01.yaml
-resolver: lts-16.3
+resolver: lts-16.22
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -29,6 +29,8 @@ packages:
 extra-deps:
 - iwlib-0.1.0
 - netlink-1.1.1.0@sha256:d83424b5ba9921191449e4b1f53c7cba7f4375f2c55a9b737c77e982e1f40d00,3689
+- X11-1.10.1@sha256:962d3bedba2d3463f24c278cf04e0694d7d231e7f3cec856bc7c9205e7068524,3705
+
 
 # flags:
 #   xmobar:
