@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.34.4.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a8bbabfe66e9b2cf3632e382c8c0a703a5aac9890cc0a26a8b3747fdd73c89e2
+-- hash: 267dce0787fb7f2a0d832c8bfd96c754f135cd1c186d34e9bafa80e30318f420
 
 name:           my-xmonad
 version:        0.1.0.0
@@ -50,7 +50,7 @@ executable my-xmonad-exe
   other-modules:
       Paths_my_xmonad
   hs-source-dirs:
-      ./.
+      ./
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -W -fforce-recomp
   build-depends:
       base >=4.7 && <5

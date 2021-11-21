@@ -11,8 +11,7 @@ import           XMonad.Layout.Named
 import           XMonad.Config.Desktop
 import           XMonad.Hooks.ManageHelpers
 import qualified XMonad.StackSet               as SS
-import           XMonad.StackSet                ( RationalRect(..)
-                                                , floating
+import           XMonad.StackSet                ( floating
                                                 , screenDetail
                                                 )
 import           XMonad.Util.EZConfig
@@ -20,7 +19,6 @@ import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Grid
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.EwmhDesktops
-import           XMonad.Hooks.UrgencyHook
 import           XMonad.Hooks.WindowSwallowing
 import           XMonad.Util.Run
 import           XMonad.Util.Scratchpad ( scratchpadManageHookDefault )
@@ -36,7 +34,7 @@ import qualified Data.Map                      as M
 
 main = do
   safeSpawn "mkfifo" ["/tmp/.xmonad-layout-log"]
-  xmonad $ setEwmhActivateHook doFocus $ ewmh
+  xmonad $ setEwmhActivateHook doFocus $ ewmhFullscreen $ docks $ ewmh
     ( desktopConfig
         { terminal           = myTerminal
         , modMask            = mod4Mask
@@ -45,7 +43,7 @@ main = do
         , borderWidth        = 2
         , normalBorderColor  = Col.unFocusedBorder
         , focusedBorderColor = Col.focusedBorder
-        , handleEventHook    = docksEventHook <> handleEventHook desktopConfig <> myHandleEventHook
+        , handleEventHook    = handleEventHook desktopConfig <> myHandleEventHook
         , manageHook         = myManageHook
         , logHook            = eventLogHookForPolybar
         , startupHook        = startupHook desktopConfig
@@ -121,6 +119,7 @@ myManageHook = mconcat
   -- Move stuff to dedicated workspaces
   , className =? "TelegramDesktop" --> doShift "(messaging)"
   , className =? "discord"         --> doShift "(messaging)"
+  , (className =? "Slack")         --> doShift "(messaging)" -- NOT WORKING >:|
 
   -- Praat popups
   , stringProperty "WM_NAME" =? "Praat Info" --> doRectFloat tinyRect
@@ -134,8 +133,8 @@ myManageHook = mconcat
   , scratchpadManageHookDefault
   ]
   where
-    smallRect = RationalRect 0.2 0.1 0.6 0.8
-    tinyRect  = RationalRect 0.3 0.2 0.4 0.6
+    smallRect = SS.RationalRect 0.2 0.1 0.6 0.8
+    tinyRect  = SS.RationalRect 0.3 0.2 0.4 0.6
     -- Scaled up GBA screen size. + 4 to account for border
     (gbaW, gbaH) = (240 * 3 + 4, 160 * 3 + 4)
 
@@ -148,8 +147,7 @@ mySwallowHook = swallowEventHook (className =? "kitty")
 
 myHandleEventHook :: Event -> X All
 myHandleEventHook = mconcat
-  [ fullscreenEventHook
-  , mySwallowHook
+  [ mySwallowHook
   , dynamicPropertyChange "WM_NAME" (title =? "Spotify" --> doShift "(music)")
   ]
 
