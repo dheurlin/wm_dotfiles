@@ -15,6 +15,7 @@ import           XMonad.StackSet                ( floating
                                                 , screenDetail
                                                 )
 import           XMonad.Util.EZConfig
+import           XMonad.Util.SpawnOnce
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.Grid
 import           XMonad.Hooks.ManageDocks
@@ -48,15 +49,26 @@ main = do
         , logHook            = eventLogHookForPolybar
         , startupHook        = startupHook desktopConfig
                                >> addEWMHFullscreen
-                               -- >> myStartupItems
+                               >> myStartupItems
         }
       `additionalKeysP` myBindings
     )
 
 -- Startup items --------------------------------------------------------------
 
--- myStartupItems :: X ()
--- myStartupItems = sequence_ [  ]
+myStartupItems :: X ()
+myStartupItems = spawnOnce $ "alttab " <> alttabFlags
+  where
+    alttabFlags = intercalate " "
+      [ "-w 1"
+      , "-d 1"
+      , "-pk Left"
+      , "-nk Right"
+      , "-vp pointer"
+      , "-t 128x150"
+      , "-i 127x64"
+      , "-font", show "xft: Source Code Pro-8"
+      ]
 
 
 -- Bar setup     ---------------------------------------------------------------
@@ -113,13 +125,10 @@ myManageHook = mconcat
       --> doRectFloat tinyRect
   , className =? "Gnome-calculator" --> doRectFloat tinyRect
 
-  --- No gaps for browser windows TODO not working!
-  , className =? "Nightly" --> liftX (setSmartSpacing False) $> Endo id
-
   -- Move stuff to dedicated workspaces
   , className =? "TelegramDesktop" --> doShift "(messaging)"
   , className =? "discord"         --> doShift "(messaging)"
-  , (className =? "Slack")         --> doShift "(messaging)" -- NOT WORKING >:|
+  , className =? "Slack"           --> doShift "(messaging)"
 
   -- Praat popups
   , stringProperty "WM_NAME" =? "Praat Info" --> doRectFloat tinyRect

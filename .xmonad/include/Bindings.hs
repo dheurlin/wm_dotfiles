@@ -27,8 +27,8 @@ myBindings =
   , ("M1-k" , windows nextWS)
   , ("M-0"  , windows $ SS.view  "10")
   , ("M-S-0", windows $ SS.shift "10")
-  , ("M-m"  , windows $ SS.view "(music)")
-  , ("M-s"  , windows $ SS.view "(messaging)")
+  , ("M-m"  , windows $ SS.view  "(music)")
+  , ("M-s"  , windows $ SS.view  "(messaging)")
   , ("M-n"  , windows $ \ws -> SS.view  (getNewWS ws) ws)
   , ("M-S-n", windows $ \ws -> SS.shift (getNewWS ws) ws)
   , ("M-S-o", windows $ \ws -> let new = getNewWS ws
@@ -59,7 +59,6 @@ myBindings =
   , ("<Print>"     , spawn "gnome-screenshot"         )
   , ("S-<Print>"   , spawn "gnome-screenshot -a"      )
   , ("M-M1-l"      , spawn "~/.config/scripts/lock.sh")
-  , ("M1-<Tab>"    , spawn "rofi -show window")
   , ("M-C-<Space>" ,
       spawn "/home/danielheurlin/scripts/dmenu-unicode/dmenu-unicode.sh")
   ] <> [
