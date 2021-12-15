@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "kebab"
 
 # Terminate already running bar instances
 killall -q polybar
@@ -8,10 +9,11 @@ killall -q polybar
 while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
 
 # Launch the main bar on every monitor
-monitors=$(xrandr --query | grep " connected")
+monitors=$(xrandr --query | grep " connected" | cut -d" " -f1)
+echo "$monitors"
 while read -r m; do
-  polybar main --reload > polybar.log 2>&1 &
-  echo "Bar launched on $monitor"
+  MONITOR=$m polybar main --reload & > logs 2>&1
+  echo "Bar launched on $m"
   # lower the bar so it's below fullscreen windows (50 times arbitrarily lol)
   for i in `seq 1 50`; do
     xdo lower -n tray

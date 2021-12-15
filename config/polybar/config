@@ -30,7 +30,10 @@ secondary = #555
 alert = #bd2c40
 
 [bar/main]
-; monitor = ${env:MONITOR:HDMI-1}
+
+locale = sv_SE.UTF-8
+
+monitor = ${env:MONITOR:HDMI-1}
 width = 100%
 height = ${config.height}
 radius = 0
@@ -60,7 +63,8 @@ font-2 = WifiIcons:size=11;2
 
 
 
-modules-left = ewmh layout-xmonad xwindow
+; modules-left = ewmh layout-xmonad xwindow
+modules-left = workspaces-xmonad layout-xmonad xwindow
 modules-right = playerinfo xbacklight pulseaudio redshift xkeyboard wlan battery date powermenu
 
 tray-position = left
@@ -78,7 +82,7 @@ cursor-scroll = ns-resize
 [module/placeholder]
 # Just a dummy module as polybar always requires at least one amodule
 type = custom/script
-width = 1
+width = 2
 
 
 ######## Main modules
@@ -96,6 +100,13 @@ format-prefix = " "
 format = <label>
 
 tail = true
+
+[module/workspaces-xmonad]
+type = custom/script
+exec = tail -F /tmp/.xmonad-workspace-log
+; exec-if = [ -p /tmp/.xmonad-workspace-log ]
+tail = true
+format = " | <label>"
 
 [module/layout-xmonad]
 type = custom/script
@@ -165,6 +176,8 @@ type = internal/xworkspaces
 format = " | <label-state>"
 format-padding = 0
 format-margin = 0
+
+; pin-workspaces = true
 
 label-mode-padding = 1
 label-mode-background = ${colors.primary}
@@ -317,7 +330,7 @@ type = internal/date
 interval = 1
 
 date = "%Y-%m-%d"
-date-alt = "%Y-%m-%d"
+date-alt = "%a %Y-%m-%d (v%V)"
 
 time = "%H:%M:%S"
 time-alt = "%H:%M:%S"

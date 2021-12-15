@@ -26,15 +26,17 @@ import           XMonad.Util.Scratchpad ( scratchpadManageHookDefault )
 import           XMonad.Hooks.DynamicProperty
 import           XMonad.Layout.Spacing
 
+import           Text.Read                      ( readMaybe )
 import           Control.Monad
 import           Data.Maybe
 import           Data.List
 import           Data.Semigroup
 import           Data.Functor                   ( ($>) )
+import           Data.Function                  ( on )
 import qualified Data.Map                      as M
 
 main = do
-  safeSpawn "mkfifo" ["/tmp/.xmonad-layout-log"]
+  forM_ [["/tmp/.xmonad-layout-log"],[ "/tmp/.xmonad-workspace-log"]] $ safeSpawn "mkfifo"
   xmonad $ setEwmhActivateHook doFocus $ ewmhFullscreen $ docks $ ewmh
     ( desktopConfig
         { terminal           = myTerminal
@@ -78,7 +80,40 @@ eventLogHookForPolybar :: X ()
 eventLogHookForPolybar = do
   winset <- gets windowset
   let ld = description . SS.layout . SS.workspace . SS.current $ winset
+  let currWs = SS.currentTag winset
+  let visWs  = map (SS.tag . SS.workspace) $ SS.visible winset
+  let wss    = [ (t, SS.tag t) | t <- SS.workspaces winset ]
+
   io $ appendFile "/tmp/.xmonad-layout-log" (ld ++ "\n")
+  io $ appendFile "/tmp/.xmonad-workspace-log" (wsStr currWs visWs wss ++ "\n")
+
+  where
+    mkIcon "(music)"     = "\60579"
+    mkIcon "(messaging)" = "\61364"
+    mkIcon ws = ws
+
+    activeMarker ws
+      | isJust $ SS.stack ws = "'"
+      | otherwise            = " "
+
+    fmt currWs visWs (wst, ws)
+          | currWs == ws              = "%{B#555} "      ++ (mkIcon ws) ++  " %{B-}"
+          | ws `elem` visWs           = "%{u#555}%{+u} " ++ (mkIcon ws) ++ " %{u-}%{-u}"
+          | isNothing $ SS.stack wst  = "%{F#888} "      ++ (mkIcon ws) ++ " %{F-}"
+          | otherwise                 = " "              ++ (mkIcon ws) ++ " "
+
+    wsStr currWs visWs wss = concatMap (fmt currWs visWs) . (sortBy (compWss `on` snd)) $  wss
+
+    rm :: String -> Maybe Int
+    rm = readMaybe
+
+    compWss "(messaging)" "(music)" = LT
+    compWss "(music)" "(messaging)" = GT
+    compWss a b
+      | (Just n) <- rm a, (Just m) <- rm b = compare n m
+      | (Just n) <- rm a, Nothing  <- rm b = LT
+      | Nothing  <- rm a, (Just _) <- rm b = GT
+      | otherwise = EQ
 
 
 -- Layouts --------------------------------------------------------------------
@@ -154,11 +189,15 @@ mySwallowHook = swallowEventHook (className =? "kitty")
                                  ( not <$> className =? "kitty" <&&>
                                   (not <$> className =? "Polybar"))
 
+-- myHandleEventHook :: Event -> X All
+-- myHandleEventHook = mconcat
+--   [ mySwallowHook
+--   , dynamicPropertyChange "WM_NAME" (title =? "Spotify" --> doShift "(music)")
+--   ]
+
 myHandleEventHook :: Event -> X All
 myHandleEventHook = mconcat
-  [ mySwallowHook
-  , dynamicPropertyChange "WM_NAME" (title =? "Spotify" --> doShift "(music)")
-  ]
+  [ dynamicPropertyChange "WM_NAME" (title =? "Spotify" --> doShift "(music)") ]
 
 
 -- Add support for NET_WM_FULLSCREEN ------------------------------------------
