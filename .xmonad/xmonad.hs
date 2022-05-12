@@ -43,7 +43,7 @@ main = do
         , modMask            = mod4Mask
         , workspaces         = map show [1..10] <> ["(messaging)", "(music)"]
         , layoutHook         = avoidStruts myLayout
-        , borderWidth        = 2
+        , borderWidth        = 1
         , normalBorderColor  = Col.unFocusedBorder
         , focusedBorderColor = Col.focusedBorder
         , handleEventHook    = handleEventHook desktopConfig <> myHandleEventHook
@@ -59,9 +59,25 @@ main = do
 -- Startup items --------------------------------------------------------------
 
 myStartupItems :: X ()
-myStartupItems = spawnOnce $ "alttab " <> alttabFlags
+myStartupItems = do
+  spawnOnce "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
+  spawnOnce "nitrogen --restore; sleep 1; picom -b"
+  spawnOnce "nm-applet"
+  spawnOnce "xfce4-power-manager"
+  spawnOnce "volumeicon"
+  spawnOnce "pamac-tray"
+  spawnOnce "clipit"
+  spawnOnce "blueman-applet"
+  spawnOnce "ff-theme-util"
+  spawn     "xinput --set-prop 'DLL082A:01 06CB:76AF Touchpad' 'libinput Accel Speed' .4; xset m 15/10 0"
+  spawn     "/home/danielheurlin/.config/scripts/sleepScreenSetup.sh"
+  spawnOnce "xss-lock -- ~/.config/scripts/lock.sh"
+  spawnOnce "/home/danielheurlin/bin/libinput-three-finger-drag"
+  spawn     "/home/danielheurlin/.config/scripts/kbd-setup.sh"
+  spawnOnce "/home/danielheurlin/.config/polybar/launch.sh"
+  spawnOnce $ "alttab " <> alttabFlags
   where
-    alttabFlags = intercalate " "
+    alttabFlags = unwords
       [ "-w 1"
       , "-d 1"
       , "-pk Left"
@@ -97,12 +113,12 @@ eventLogHookForPolybar = do
       | otherwise            = " "
 
     fmt currWs visWs (wst, ws)
-          | currWs == ws              = "%{B#555} "      ++ (mkIcon ws) ++  " %{B-}"
-          | ws `elem` visWs           = "%{u#555}%{+u} " ++ (mkIcon ws) ++ " %{u-}%{-u}"
-          | isNothing $ SS.stack wst  = "%{F#888} "      ++ (mkIcon ws) ++ " %{F-}"
-          | otherwise                 = " "              ++ (mkIcon ws) ++ " "
+          | currWs == ws              = "%{F#292F34}%{B#16a085} "      ++ mkIcon ws ++  " %{F-}%{B-}"
+          | ws `elem` visWs           = "%{u#555}%{+u} " ++ mkIcon ws ++ " %{u-}%{-u}"
+          | isNothing $ SS.stack wst  = "%{F#888} "      ++ mkIcon ws ++ " %{F-}"
+          | otherwise                 = " "              ++ mkIcon ws ++ " "
 
-    wsStr currWs visWs wss = concatMap (fmt currWs visWs) . (sortBy (compWss `on` snd)) $  wss
+    wsStr currWs visWs wss = concatMap (fmt currWs visWs) . sortBy (compWss `on` snd) $  wss
 
     rm :: String -> Maybe Int
     rm = readMaybe
@@ -136,7 +152,7 @@ myLayout = lessBorders AllFloats $
   -- Percent of screen to increment by when resizing panes
   delta   = 3 / 100
 
-  gaps = spacingRaw False (Border 5 5 5 5) True (Border 5 5 5 5) True
+  gaps = spacingRaw False (Border 4 4 4 4) True (Border 4 4 4 4) True
   -- gaps = id
 
 
