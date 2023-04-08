@@ -56,11 +56,11 @@ myBindings =
   , ("<XF86AudioNext>"           , spawn "playerctl next"                 )
   , ("<XF86AudioPrev>"           , spawn "playerctl previous"             )
   -- Misc ---------------------------------------------------------------------
-  , ("<Print>"     , spawn "gnome-screenshot"         )
-  , ("S-<Print>"   , spawn "gnome-screenshot -a"      )
+  , ("<Print>"     , spawn "scrot \"$HOME/Bilder/screenshots/screenshot_$(date +%Y_%m_%d_%H:%M:%S).png\"")
+  , ("S-<Print>"   , spawn "scrot -s \"$HOME/Bilder/screenshots/screenshot_$(date +%Y_%m_%d_%H:%M:%S).png\"")
   , ("M-M1-l"      , spawn "~/.config/scripts/lock.sh")
   -- , ("M-M1-l"      , spawn "blurlock")
-  , ("C-<Space>"   , spawn "dunstctl close")
+  , ("C-S-<Space>"   , spawn "dunstctl close")
   , ("M-C-<Space>" ,
       spawn "/home/danielheurlin/scripts/dmenu-unicode/dmenu-unicode.sh")
   ] <> [

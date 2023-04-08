@@ -34,6 +34,7 @@ import           Data.Semigroup
 import           Data.Functor                   ( ($>) )
 import           Data.Function                  ( on )
 import qualified Data.Map                      as M
+import XMonad.Hooks.SetWMName
 
 main = do
   forM_ [["/tmp/.xmonad-layout-log"],[ "/tmp/.xmonad-workspace-log"]] $ safeSpawn "mkfifo"
@@ -48,7 +49,7 @@ main = do
         , focusedBorderColor = Col.focusedBorder
         , handleEventHook    = handleEventHook desktopConfig <> myHandleEventHook
         , manageHook         = myManageHook
-        , logHook            = eventLogHookForPolybar
+        , logHook            = eventLogHookForPolybar *> setWMName "LG3D"
         , startupHook        = startupHook desktopConfig
                                >> addEWMHFullscreen
                                >> myStartupItems
@@ -70,8 +71,8 @@ myStartupItems = do
   spawnOnce "blueman-applet"
   spawnOnce "ff-theme-util"
   spawn     "xinput --set-prop 'DLL082A:01 06CB:76AF Touchpad' 'libinput Accel Speed' .4; xset m 15/10 0"
-  spawn     "/home/danielheurlin/.config/scripts/sleepScreenSetup.sh"
-  spawnOnce "xss-lock -- ~/.config/scripts/lock.sh"
+  spawnOnce "xss-lock -- blurlock"
+  spawnOnce "/home/danielheurlin/.config/scripts/keepAwakeWhilePlaying.sh"
   spawnOnce "/home/danielheurlin/bin/libinput-three-finger-drag"
   spawn     "/home/danielheurlin/.config/scripts/kbd-setup.sh"
   spawnOnce "/home/danielheurlin/.config/polybar/launch.sh"
@@ -113,7 +114,7 @@ eventLogHookForPolybar = do
       | otherwise            = " "
 
     fmt currWs visWs (wst, ws)
-          | currWs == ws              = "%{F#292F34}%{B#16a085} "      ++ mkIcon ws ++  " %{F-}%{B-}"
+          | currWs == ws              = "%{F#292F34}%{B#16a085} "     ++ mkIcon ws ++  " %{F-}%{B-}"
           | ws `elem` visWs           = "%{u#555}%{+u} " ++ mkIcon ws ++ " %{u-}%{-u}"
           | isNothing $ SS.stack wst  = "%{F#888} "      ++ mkIcon ws ++ " %{F-}"
           | otherwise                 = " "              ++ mkIcon ws ++ " "
@@ -183,6 +184,9 @@ myManageHook = mconcat
 
   -- Praat popups
   , stringProperty "WM_NAME" =? "Praat Info" --> doRectFloat tinyRect
+
+  -- Android emulator should float
+  , stringProperty "_NET_WM_NAME" =? "Emulator" --> doFloat
 
   -- Make NO$GBA debugger behave
   , ("No$gba Emulator" `isPrefixOf`) <$> stringProperty "WM_NAME"
