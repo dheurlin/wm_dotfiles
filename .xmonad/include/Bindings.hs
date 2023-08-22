@@ -12,6 +12,7 @@ import           XMonad.Layout.Spacing
 import           XMonad.Util.Scratchpad ( scratchpadSpawnActionCustom )
 
 import           System.Exit
+import BarNotifications (showVolumeNotification)
 
 myBindings :: [(String, X ())]
 myBindings =
@@ -44,8 +45,8 @@ myBindings =
   , ("M-M1-<Space>", spawn "xkb-switch -n"        ) -- toggle between layouts
   , ("C-<Esc>"     , spawn "xdotool key Caps_Lock")
   -- Media Keys ---------------------------------------------------------------
-  , ("<XF86AudioRaiseVolume>"    , spawn "pulseaudio-control --volume-max 130 up")
-  , ("<XF86AudioLowerVolume>"    , spawn "pulseaudio-control --volume-max 130 down")
+  , ("<XF86AudioRaiseVolume>"    , spawn "pulseaudio-control --volume-max 130 up" >> showVolumeNotification)
+  , ("<XF86AudioLowerVolume>"    , spawn "pulseaudio-control --volume-max 130 down" >> showVolumeNotification)
   , ("<XF86AudioMute>"           , spawn "pulseaudio-control togmute"       )
   -- , ("<XF86MonBrightnessUp>"     , spawn "xbacklight -inc 10"             )
   -- , ("<XF86MonBrightnessDown>"   , spawn "xbacklight -dec 10"             )
