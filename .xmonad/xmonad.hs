@@ -65,7 +65,7 @@ myStartupItems = do
   spawnOnce "nitrogen --restore; sleep 1; picom -b"
   spawnOnce "nm-applet"
   spawnOnce "xfce4-power-manager"
-  spawnOnce "volumeicon"
+  -- spawnOnce "volumeicon"
   spawnOnce "pamac-tray"
   spawnOnce "clipit"
   spawnOnce "blueman-applet"

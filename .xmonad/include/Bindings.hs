@@ -44,9 +44,9 @@ myBindings =
   , ("M-M1-<Space>", spawn "xkb-switch -n"        ) -- toggle between layouts
   , ("C-<Esc>"     , spawn "xdotool key Caps_Lock")
   -- Media Keys ---------------------------------------------------------------
-  -- , ("<XF86AudioRaiseVolume>"    , spawn "~/.config/scripts/volume.sh 5%+")
-  -- , ("<XF86AudioLowerVolume>"    , spawn "~/.config/scripts/volume.sh 5%-")
-  -- , ("<XF86AudioMute>"           , spawn "amixer set Master toggle"       )
+  , ("<XF86AudioRaiseVolume>"    , spawn "pulseaudio-control --volume-max 130 up")
+  , ("<XF86AudioLowerVolume>"    , spawn "pulseaudio-control --volume-max 130 down")
+  , ("<XF86AudioMute>"           , spawn "pulseaudio-control togmute"       )
   -- , ("<XF86MonBrightnessUp>"     , spawn "xbacklight -inc 10"             )
   -- , ("<XF86MonBrightnessDown>"   , spawn "xbacklight -dec 10"             )
   , ("M-<F10>"                   , spawn "xbacklight -set 1"              )
