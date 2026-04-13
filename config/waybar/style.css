@@ -132,6 +132,10 @@ label:focus {
   background-color: #ffa000;
 }
 
+#custom-power {
+  padding-right: 17px;
+}
+
 #idle_inhibitor {
   padding-right: 17px;
   color: white;
