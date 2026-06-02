@@ -28,6 +28,8 @@
   ],
   "hyprland/language": {
     "format": "{short} <span foreground=\"white\"></span>",
+    "keyboard-name": "keyd-virtual-keyboard",
+    "interval": 1
   },
   "hyprland/window": {
     "max-length": 50
